@@ -1,3 +1,4 @@
+// Js file for intswap.html
 App = {
   web3Provider: null,
   contracts: {},
