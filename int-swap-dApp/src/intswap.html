@@ -9,7 +9,9 @@
     <title>Create an IntSwap Contract</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/intswap.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,6 +22,29 @@
   </head>
   <body>
     <div class="container">
+      <div>
+        
+      </div>
+      <div class="container w-50">
+        <form class="d-flex flex-column">
+          <label>Notional Amount</label>
+          <input id="notional_amout" type="number" name="notional_amout">
+          <label>Escrow Amount</label>
+          <input id="escrow_amount" type="number" name="escrow_amount">
+          <label>Maturity Date</label>
+          <input id="maturity_date" type="date" name="maturity_date">
+          <label>Rate Type</label>
+          <select id="rate_type">
+            <option>Select</option>
+            <option value="Fixed to Variable">Fixed to Variable</option>
+            <option value="Variable to Fixed">Variable to Fixed</option>
+          </select>
+
+          <button>Submit</button>
+
+        </form>
+      </div>
+
  
     </div>
 
