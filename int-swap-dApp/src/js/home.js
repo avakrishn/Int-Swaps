@@ -1,0 +1,1 @@
+// Js file for index.html and about.html
