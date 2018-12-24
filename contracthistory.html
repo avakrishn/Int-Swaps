@@ -10,6 +10,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" type="text/css" href="css/contracthistory.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -25,22 +26,46 @@
         <img src="intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
       </header>
       <nav>
-          <button type="button" class="btn btn-primary"><a href="index.html">Home</a></button>
-          <button type="button" class="btn btn-primary"><a href="intswap.html">Create a Contract</a></button>
-          <button type="button" class="btn btn-primary"><a href="#">Contract History</a></button>
-          <button type="button" class="btn btn-primary"><a href="withdraw.html">Withdraw</a></button>
-          <button type="button" class="btn btn-primary"><a href="about.html">About Us</a></button> 
+          <a class="btn btn-primary" href="index.html">Home</a>
+          <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+          <a class="btn btn-primary" role="button" href="#">Contract History</a>
+          <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="about.html">About Us</a>    
       </nav>
     </div>
     <div class="container">
        <div class="row">
             <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
-              <h2 class="text-center">Contract History</h2>
-              <hr/>
+              <h2 class="text-center" style="color:#096EB6;">Contract History</h2>
+            <br/>
+            </div>   
+       </div>    
+       <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
+
+              <table width="800" cellspacing="2" cellpadding="4" >
+                <thead>
+                  <tr style="color:#096EB6; font-weight: bold; align-self: center;">
+                  <th>IntSwap<br/>ID</th> <th>Inception<br/>Date</th> <th>Maturity<br/>Date</th><th>Swap<br/>Into</th> <th>Notional</br/>$ Amount</th> <th>Swap<br/>Rate %</th> <th>Escrow<br/>$ Amount</th> <th>$ Payout</th> <th>Status</th><th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="fill_history_table">
+                  <tr><td>0001</td> <td>7/18/2017</td> <td>12/31/2018</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>320.00</td><td>Ready to Pay</td>
+                    <td><a href="./withdraw.html" class="btn btn-primary btn-sm">Withdraw</a></td></tr>
+                  <tr><td>0002</td> <td>1/15/2018</td> <td>1/31/2021</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0003</td> <td>1/15/2018</td> <td>6/30/2019</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0004</td> <td>4/15/2018</td> <td>6/30/2020</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0005</td> <td>4/15/2018</td> <td>7/31/2020</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0006</td> <td>4/15/2018</td> <td>7/31/2018</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>312.00</td><td>Paid</td></tr>
+                  <tr><td>0007</td> <td>1/16/2019</td> <td>7/31/2020</td><td>Fixed</td> <td>100,000</td><td>2.86</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                </tbody>
+              </table>
               <br/>
-          </div>   
-        </div>    
- 
+               <p> TBD = To be determined </p>
+            </div>
+       </div>
+      
+
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
