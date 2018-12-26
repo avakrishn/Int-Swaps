@@ -18,10 +18,19 @@ a:hover {
 	text-decoration: none;
 }
 
-.center {
-	
+.center {	
 	display: block;
   	margin-left: auto;
   	margin-right: auto;
 }
 
+h3 {
+	color: #096EB6;
+	font-weight: bold;
+
+}
+
+sup {
+  	font-weight: bold;
+  	font-size: 16px;
+  }
