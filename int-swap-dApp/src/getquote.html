@@ -1,0 +1,115 @@
+<!-- This will be our Create an Intswap Page -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Get a Quote</title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/getquote.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="text-center">
+      <header>
+        <img src="images/intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
+      </header>
+      <nav>
+          <a class="btn btn-primary" href="index.html">Home</a>
+          <a class="btn btn-primary" role="button" href="#">Get a Quote</a>
+          <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
+          <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="about.html">About Us</a>     
+      </nav>
+    </div>
+
+    <div class="container">
+      <div>
+         <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-12">
+              <h2 class="text-center" style="color:#096EB6;">Get a Quote</h2>
+              <br/>
+            </div>   
+         </div>
+      </div>
+      <div class="container w-50">
+        <form class="d-flex flex-column" id="step_one">
+          <label>Notional amount of loan principal you want Intswap to apply to:</label>
+          <input id="notional_amount" type="number" name="notional_amount">
+    <!--    We will compute the escrow amount automatically for the demo at 0.2% of notional.  No input allowed.
+            <label>Escrow Amount</label>
+            <input id="escrow_amount" type="number" name="escrow_amount">-->
+          <label style="color:#096EB6;">Select month-end date for the month that you would like to swap:</label>
+          <input id="maturity_date" type="date" name="maturity_date">
+          <label>What annual rate of interest do you currently pay?</label>
+          <input id="current_annual_rate" type="number" name="current_annual_rate">
+          <label>What rate type do you want to swap out of?</label>
+          <select id="swap_out_of_rate_type">         
+            <option>Select</option>
+            <option value="Fixed to Variable">From Fixed into Variable</option>
+            <option value="Variable to Fixed">From Variable into Fixed</option>
+          </select>
+          <br/>
+          <button type="button" class="btn btn-primary btn-sm center" id="get_quote" style="width: 25%">Submit</button>
+        </form>
+      </div>
+      <div class="container w-50" id="step_two_display_swap_rate" style="display: block">
+         <div class="row">        
+          <p id="display_contract_length"><p/>
+          <p id="display_swap_out_of_rate_type"></p>
+          <p id="display_escrow_amount"></p>
+         </div>
+      </div>
+      <div class="container w-50" id="step_three_display_profit_agree">
+           
+
+        
+      </div>
+     
+         
+      <div>
+            <p>Please acknowledge that you understand and agree to the following:<br/>
+              1. I realize that the interest rate swap may not match the exact amount of interest on my own mortgage.<br/>
+              2. The variable index rate on my own mortgage may differ from the one-month US Dollar LIBOR index that is used for the IntSwaps variable rate.<br/>
+              3. I may lose all of my escrow if the change in interest rates is unfavorable to me.<br/>
+              4. The US Dollar LIBOR monthly rate at the beginning of the contract maturity month that I have selected will be used to determine the payout.<br/>
+              5. I realize that fluctuations in the value of any Ether or ERC20 token posted as escrow will not be taken into account and all calculations will be based on the original conversion rate in effect at the inception of the contract.<br/>
+              6. I realize that I still must make the payment on my own mortgage direct to the holder of my mortgage.<br/>
+              7. I realize that my profit or loss will be based on the change in interest rates compared to the swap contract rate.</p>
+      </div>
+      <div class="center">
+            <input type="checkbox" name="agree" value="agree"> I understand and agree.<br>
+            <input type="checkbox" name="disagree" value="disagree"> I do not understand/agree.<br><br>
+            <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: 30%">Buy</button><br>
+            <button type="button" class="btn btn-primary center btn-sm" style="width: 30%">Cancel and go back</button><br>
+       
+      </div>
+      <div container w-50 id="step_four_confirm_trade">
+        
+
+      </div>       
+      
+
+  </div>
+  
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+ </body>
+</html>
