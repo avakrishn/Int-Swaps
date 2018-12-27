@@ -1,0 +1,40 @@
+/*CSS for getquote.html*/
+
+/* Style the links inside the navigation bar 
+Button and nav anchor color was not the same as the other pages (I don't know why) 
+so had to add .btn and .btn-primary styles here to correct*/
+
+.btn-primary {
+	color: white;
+	background-color: #096EB6;
+	text-decoration: none;
+}
+
+.btn  {
+	color: white;
+	background-color: #096EB6;	
+	text-decoration: none;
+}
+
+/* Change the color of links on hover */
+a:hover {
+	color: white;
+	background-color: #4DB748;
+	text-decoration: none;
+}
+
+.btn:hover {
+	color: white;
+    background-color: #4DB748;
+	text-decoration: none;
+}
+
+.center {
+	align-self: center;
+}
+
+label {
+	color: #096EB6;
+	font-weight: bold;
+}
+
