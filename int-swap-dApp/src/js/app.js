@@ -1,4 +1,4 @@
-// Js file for intswap.html
+// Js file for intswap.html but name changed to getquote.html
 App = {
   web3Provider: null,
   contracts: {},
@@ -39,6 +39,31 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '#transferButton', App.handleTransfer);
+    $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+  },
+
+
+  displayProfitLoss: function(event){
+    $(document).ready(function(){
+      $("#displayProfitLoss").click(function(){
+      $("#step_one").hide();
+      $("#step_two").show();
+      }); 
+    });
+    var $escrow_amount = notional_amount * 0.002;
+    var $unix_date_now = new Date();
+    var $unix_maturity_date = new Date(maturity_date); 
+    var $swap_contract_rate = 0.0280;   //hard-code this value for demo
+    var $contract_months = $unix_maturity_date - $unix_date_now; //parse month and year instead???
+    document.getElementById("display_maturity_date").innerHTML = $unix_maturity_date;
+    document.getElementById("display_inception_date").innerHTML = $unix_date_now;
+    document.getElementById("display_escrow_amount").innerHTML = "The required escrow amount is:".$escrow_amount;
+    document.getElementById("demo").innerHTML = "Hello World!";
+
+    //left off here* still need to calculate number of months ****************************************************************************************
+
+
+
   },
 
   handleTransfer: function(event) {
@@ -104,3 +129,7 @@ $(function() {
     App.init();
   });
 });
+
+
+
+
