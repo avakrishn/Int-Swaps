@@ -1,0 +1,79 @@
+<!-- This will be our Contract History/ Status page -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>My Intswap Contracts</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/contracthistory.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="text-center">
+      <header>
+        <img src="intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
+      </header>
+      <nav>
+          <a class="btn btn-primary" href="index.html">Home</a>
+          <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+          <a class="btn btn-primary" role="button" href="#">Contract History</a>
+          <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="about.html">About Us</a>    
+      </nav>
+    </div>
+    <div class="container">
+       <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
+              <h2 class="text-center" style="color:#096EB6;">Contract History</h2>
+            <br/>
+            </div>   
+       </div>    
+       <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
+
+              <table width="800" cellspacing="2" cellpadding="4" >
+                <thead>
+                  <tr style="color:#096EB6; font-weight: bold; align-self: center;">
+                  <th>IntSwap<br/>ID</th> <th>Inception<br/>Date</th> <th>Maturity<br/>Date</th><th>Swap<br/>Into</th> <th>Notional</br/>$ Amount</th> <th>Swap<br/>Rate %</th> <th>Escrow<br/>$ Amount</th> <th>$ Payout</th> <th>Status</th><th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="fill_history_table">
+                  <tr><td>0001</td> <td>7/18/2017</td> <td>12/31/2018</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>320.00</td><td>Ready to Pay</td>
+                    <td><a href="./withdraw.html" class="btn btn-primary btn-sm">Withdraw</a></td></tr>
+                  <tr><td>0002</td> <td>1/15/2018</td> <td>1/31/2021</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0003</td> <td>1/15/2018</td> <td>6/30/2019</td><td>Fixed</td> <td>100,000</td><td>2.88</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0004</td> <td>4/15/2018</td> <td>6/30/2020</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0005</td> <td>4/15/2018</td> <td>7/31/2020</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                  <tr><td>0006</td> <td>4/15/2018</td> <td>7/31/2018</td><td>Fixed</td> <td>100,000</td><td>3.15</td><td>200</td><td>312.00</td><td>Paid</td></tr>
+                  <tr><td>0007</td> <td>1/16/2019</td> <td>7/31/2020</td><td>Fixed</td> <td>100,000</td><td>2.86</td><td>200</td><td>TBD</td><td>Outstanding</td></tr>
+                </tbody>
+              </table>
+              <br/>
+               <p> TBD = To be determined </p>
+            </div>
+       </div>
+      
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/withdraw.js"></script>
+  </body>
+</html>
