@@ -103,13 +103,13 @@
                   <th class="quote">Description</th><th class="quote">Amount/Value</th>
                 </thead>
                 <tbody>
-                  <tr><td>Notional Amount</td><td id="insert_notional_amount"></td></tr>
-                  <tr><td>Month and Year to Swap</td><td id="insert_month_year"></td></tr>
-                  <tr><td>Your Current Interest Rate</td><td id="insert_current_annual_rate"></td></tr>
-                  <tr><td>Swap From/To</td><td id="insert_swap_out_of_rate_type"></td></tr>
-                  <tr><td>Escrow Amount Required</td><td id="insert_escrow_amount"></td></tr>
-                  <tr><td>Swap Contract Rate</td><td id="insert_swap_rate">2.88%</td></tr>
-                  <tr><td>Service charge</td><td>$2.00</td></tr>
+                  <tr><td>Notional Amount</td><td id="insert_notional_amount" class="quote">$</td></tr>
+                  <tr><td text-indent>Swap Month/Year</td><td id="insert_month_year" class="quote"></td></tr>
+                  <tr><td>Your Current %</td><td id="insert_current_annual_rate" class="quote">%</td></tr>
+                  <tr><td>Swap From/To</td><td id="insert_swap_out_of_rate_type" class="quote"></td></tr>
+                  <tr><td>Escrow Amount</td><td id="insert_escrow_amount" class="quote">$</td></tr>
+                  <tr><td>Swap Contract %</td><td id="insert_swap_rate" class="quote">2.880%</td></tr>
+                  <tr><td>Service charge</td><td class="quote">$2.00</td></tr>
                 </tbody>
               </table>
             </div>
@@ -122,13 +122,13 @@
                 <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit">Link to Details</th>
               </thead>
               <tbody>
-                <tr><td>-3.0%</td><td id="insert_minus_three_result"></td><td><button class="btn btn-sm" onclick="getDetails(-3)" id="minus_three">See details</button></td></tr>
-                <tr><td>-2.0%</td><td id="insert_minus_two_result"></td><td><button class="btn btn-sm" onclick="getDetails(-2)" id="minus_two">See details</button></td></tr>
-                <tr><td>-1.0%</td><td id="insert_minus_one_result"></td><td><button class="btn btn-sm" onclick="getDetails(-1)" id="minus_one">See details</button></td></tr>
-                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result"></td><td><button  class="btn btn-sm" onclick="getDetails(0)" id="zero_change">See details</button></td></tr>
-                <tr><td>+1.0%</td><td id="insert_plus_one_result"></td><td><button class="btn btn-sm"   onclick="getDetails(1)" id="plus_one">See details</button></td></tr>
-                <tr><td>+2.0%</td><td id="insert_plus_two_result"></td><td><button class="btn btn-sm"   onclick="getDetails(2)" id="plus_two">See details</button></td></tr>
-                <tr><td>+3.0%</td><td id="insert_plus_three_result"></td><td><button class="btn btn-sm" onclick="getDetails(3)" id="plus_three">See details</button></td></tr>
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-3)" id="minus_three">See details</button></td></tr>
+                <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-2)" id="minus_two">See details</button></td></tr>
+                <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-1)" id="minus_one">See details</button></td></tr>
+                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit">$0.00</td><td><button  class="btn btn-sm" onclick="getDetails(0)" id="zero_change">See details</button></td></tr>
+                <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit">$</td><td><button class="btn btn-sm"   onclick="getDetails(1)" id="plus_one">See details</button></td></tr>
+                <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit">$</td><td><button class="btn btn-sm"   onclick="getDetails(2)" id="plus_two">See details</button></td></tr>
+                <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(3)" id="plus_three">See details</button></td></tr>
               </tbody>
     <!--     <p id="display_quote"><p/> -->
 

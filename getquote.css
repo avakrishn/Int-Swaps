@@ -46,6 +46,14 @@ th.quote {
    
 }
 
+td.quote {
+	text-align: center;
+	column-width: 370px;
+
+
+
+}
+
 th.profit {
 	color: #096EB6;
 	text-align: center;
@@ -53,6 +61,11 @@ th.profit {
 
 }
 
+td.profit {
+	text-align: center;
+	column-width: 250px;
+	
+}
 th.details {
 	color: #096EB6;
 	text-align: center;
