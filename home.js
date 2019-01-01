@@ -4,4 +4,4 @@ $(document).ready(function(){
   //I was trying to put #getQuote here because it is not firing when it is in bindEvents
   //it is not working here either. Any ideas?
   
-};
+});
