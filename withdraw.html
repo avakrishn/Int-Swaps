@@ -10,6 +10,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" type="text/css" href="css/withdraw.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -22,26 +23,53 @@
   <body>
    <div class="text-center">
       <header>
-        <img src="intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
+        <img src="images/intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
       </header>
       <nav>
-          <button type="button" class="btn btn-primary"><a href="index.html">Home</a></button>
-          <button type="button" class="btn btn-primary"><a href="intswap.html">Create a Contract</a></button>
-          <button type="button" class="btn btn-primary"><a href="contracthistory.html">Contract History</a></button>
-          <button type="button" class="btn btn-primary"><a href="#">Withdraw</a></button>
-          <button type="button" class="btn btn-primary"><a href="about.html">About Us</a></button> 
+          <a class="btn btn-primary" href="index.html">Home</a>
+          <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+          <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
+          <a class="btn btn-primary" role="button" href="#">Withdraw</a>
+          <a class="btn btn-primary" href="faq.html">FAQ</a>
+          <a class="btn btn-primary" href="about.html">About Us</a>       
       </nav>
     </div>
 
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
-            <h2 class="text-center">Make a Withdrawal</h2>
-            <hr/>
+            <h2>Make a Withdrawal</h2>
             <br/>
         </div>
       </div>
+    <!-- The following section moved from index.html--still needs to be worked on. -->   
+      <div id="petsRow" class="row">
+        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">My Wallet</h3>
+            </div>
+            <div class="panel-body">
+              <h4>Balance</h4>
+              <strong>Balance</strong>: <span id="TTBalance"></span> TT<br/><br/>
+              <h4>Transfer</h4>
+              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Address" />
+              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Amount" />
+              <button class="btn btn-primary" id="transferButton" type="button">Transfer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+    <div>
+      <footer>
+        <p>&copy IntSwaps<sup>TM</sup> LLC 2018.  All rights reserved.
+        </p>
+      </footer>
+    </div>
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

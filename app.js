@@ -1,13 +1,12 @@
 // Js file for intswap.html but name changed to getquote.html
 //get input data from getquote.html input form
-var notional_amount = $('#notional_amount');
+//var notional_amount = $('#notional_amount');
 var maturity_month = $('#maturity_month');
 var maturity_year = $('#maturity_year');
-var maturity_month_year = maturity_month.maturity_year;
-var current_annual_rate = $('#current_annual_rate');
 var swap_out_of_rate_type = $('#swap_out_of_rate_type');
-var escrow_amount = notional_amount * 0.002;
-var swap_contract_rate = 0.0288;   //hard-code this value for demo
+
+
+
 
 
 App = {
@@ -55,16 +54,13 @@ App = {
   }, //end of bindEvents
 
  
-
-
-  
    
   placeTrade: function(event){
    
     $(document).ready(function(){
          event.preventDefault();
 
-    if (document.getElementByID("agree").innerHTML =="agree"){
+    if (document.getElementByID("agree").innerHTML == "agree"){
         $("#placeTrade").click(function(){
           // hard coding the swap rate and moving decimal 7 places
            var swap_rate = 288000;
@@ -85,7 +81,7 @@ App = {
         }); 
       
     }
-    elseif 
+    else if 
        (document.getElementByID("disagree").innerHTML == "disagree"){
         var notAgreePara = document.createElement("p");
         var notAgreeText = document.createTextNode("You must check that you understand and agree to the terms and risks before you can place an order.");

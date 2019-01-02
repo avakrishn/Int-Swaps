@@ -24,35 +24,37 @@
   <body>
     <div class="text-center">
       <header>
-        <img src="images/intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
+        <img src="images/intswapslogo.png" alt="IntSwaps logo" height="100" width="400" class="justify-content-center">
       </header>
       <nav>
           <a class="btn btn-primary" href="index.html">Home</a>
           <a class="btn btn-primary" role="button" href="#">Get a Quote</a>
           <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
           <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="faq.html">FAQ</a>
           <a class="btn btn-primary" href="about.html">About Us</a>     
       </nav>
     </div>
-
-    <div class="container">
-      <div>
+    
+    <div class="container" >
+<!--had to put whole page inside a div so that reset button at bottom would work on top section step_one_input-->
+      <form id="whole_page" class="d-flex flex-column justify-content-center">
+      <div class="container" >
          <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-12">
-              <h2 class="text-center" style="color:#096EB6;">Get a Quote</h2>
+            <div class="center" width="700px">
+              <h2 class="text-center">Get a Quote</h2>
               <br/>
             </div>   
          </div>
       </div>
       <div class="container w-50">
-        <form class="d-flex flex-column" id="step_one_input">
-          <label>Notional amount of loan principal you want IntSwap to apply to:</label>
-          <input id="notional_amount" type="number" name="notional_amount">
-    <!--    We will compute the escrow amount automatically for the demo at 0.2% of notional.  No input allowed.
-            <label>Escrow Amount</label>
-            <input id="escrow_amount" type="number" name="escrow_amount">-->
-          <label style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
-              <select id="maturity_month">
+        <div class="row">
+          <div id="step_one_input" class="center">
+          <label for "notional_amount">Notional amount of loan principal that IntSwap<sup>TM</sup> would apply to:</label>
+          <input id="notional_amount" type="number" name="notional_amount" placeholder="Loan principal amount that you want to swap interest on...">
+          <label for maturity_month style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
+            <div class="d-flex flex-row justify-content-center">
+              <select id="maturity_month" type="number">
                 <option value="01">January</option>
                 <option value="02">February</option>
                 <option value="03">March</option>
@@ -66,7 +68,7 @@
                 <option value="11">November</option>
                 <option value="12">December</option>
               </select>              
-              <select id="maturity_year">
+              <select id="maturity_year" type="number">
                 <option value="2019">2019</option>
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
@@ -82,21 +84,23 @@
                 <option value="2031">2031</option>
                 <option value="2032">2032</option>    
               </select>
-          <label>What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
-          <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate">
-          <label>What rate type do you want to swap out of?</label>
-          <select id="swap_out_of_rate_type">         
+            </div>
+          <label for "current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
+          <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate" placeholder="%">
+          <label for "swap_out_of_rate_type">What rate type do you want to swap out of?</label>
+          <select id="swap_out_of_rate_type" type="text">         
             <option>Select</option>
             <option value="Fixed to Variable">From Fixed into Variable</option>
             <option value="Variable to Fixed">From Variable into Fixed</option>
           </select>
           <br/>
-          <button type="button" class="btn btn-primary btn-sm center" id="getQuote" onclick="getQuote()" style="width: auto">Get a Quote</button>
-        </form>
+          <button type="button" class="btn btn-primary btn-sm center" id="getQuote" style="width: auto">Get a Quote</button>
+          </div> 
+        </div>
       </div>
       <div class="container w-50">
           <div class="row">
-            <div id="step_two_display_quote" style="display: block">
+            <div id="step_two_display_quote" style="display: none">
               <table class="d-flex flex-column center"> 
                 <thead>
                   <caption class="text-center">Your Quote Details</caption>
@@ -107,8 +111,8 @@
                   <tr><td text-indent>Swap Month/Year</td><td id="insert_month_year" class="quote"></td></tr>
                   <tr><td>Your Current %</td><td id="insert_current_annual_rate" class="quote">%</td></tr>
                   <tr><td>Swap From/To</td><td id="insert_swap_out_of_rate_type" class="quote"></td></tr>
-                  <tr><td>Escrow Amount</td><td id="insert_escrow_amount" class="quote">$</td></tr>
-                  <tr><td>Swap Contract %</td><td id="insert_swap_rate" class="quote">2.880%</td></tr>
+                  <tr><td>Escrow Amount</td><td id="insert_escrow_amount" class="quote"></td></tr>
+                  <tr><td>Swap Contract %</td><td id="insert_swap_rate" class="quote"></td></tr>
                   <tr><td>Service charge</td><td class="quote">$2.00</td></tr>
                 </tbody>
               </table>
@@ -116,26 +120,41 @@
           </div>
             <br>
           <div class="row">  
-            <table class="d-flex flex-column" id="step_three_profit_loss_table" style="display: block"> 
+            <div id="step_three_profit_loss_table" style="display: none">
+            <table class="d-flex flex-column"> 
               <thead>
                 <h6>Your profit or (loss) would be these amounts (excluding service charges) if LIBOR at the beginning of the maturity month differs from the Swap Contract Rate: </h6>
                 <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit">Link to Details</th>
               </thead>
               <tbody>
-                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-3)" id="minus_three">See details</button></td></tr>
-                <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-2)" id="minus_two">See details</button></td></tr>
-                <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(-1)" id="minus_one">See details</button></td></tr>
-                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit">$0.00</td><td><button  class="btn btn-sm" onclick="getDetails(0)" id="zero_change">See details</button></td></tr>
-                <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit">$</td><td><button class="btn btn-sm"   onclick="getDetails(1)" id="plus_one">See details</button></td></tr>
-                <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit">$</td><td><button class="btn btn-sm"   onclick="getDetails(2)" id="plus_two">See details</button></td></tr>
-                <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit">$</td><td><button class="btn btn-sm" onclick="getDetails(3)" id="plus_three">See details</button></td></tr>
-              </tbody>
-    <!--     <p id="display_quote"><p/> -->
+       <!-- take out next line to test modal instead          
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button class="btn btn-sm" 
+                  onclick="getDetails(-3)" id="insert minus_three_result"
+                  >See details</button></td></tr> -->
+   <!--substitute below
+                 <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" id="detailBtn" data-keyboard="true">See details</button></td></tr>-->
 
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" data-toggle="modal" data-target="#detailModal" data-keyboard="true">See details</button></td></tr>
+
+
+
+
+                <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(-2)" id="minus_two" data-keyboard="true">See details</button></td></tr>
+                <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(-1)" id="minus_one" data-keyboard="true">See details</button></td></tr>
+                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit">$0.00</td><td><button  class="btn btn-sm" onclick="getDetails(0)" id="zero_change" data-keyboard="true">See details</button></td></tr>
+                <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit">$</td><td><button type="button" class="btn btn-sm"   onclick="getDetails(1)" id="plus_one" data-keyboard="true">See details</button></td></tr>
+                <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit">$</td><td><button type="button" class="btn btn-sm"   onclick="getDetails(2)" id="plus_two" data-keyboard="true">See details</button></td></tr>
+                <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(3)" id="plus_three" data-keyboard="true">See details</button></td></tr>
+              </tbody>
             </table>
-         </div>
+          
+          </div> 
+              <!-- end of step-three-profit-loss-table div-->
+
+             
+
          <div class="row">
-          <p id="step_four_display_risks" style="display: block">
+          <p id="step_four_display_risks" style="display: none">
               Please acknowledge that you understand and agree to the following:<br/>
               1. The interest rate swap may not match the exact amount of interest on my own mortgage.<br/>
               2. The variable index rate on my own mortgage may differ from the one-month US Dollar LIBOR index that is used for the IntSwaps variable rate.<br/>
@@ -148,7 +167,7 @@
         </div>
       </div>
       <div class="container w-75 center">
-         <div id="step_five_agree" style="display: block; text-align: center">
+         <div id="step_five_agree" style="display: none; text-align: center">
             <form>
               <div class="radio">
               <label><input type="radio" name="riskAgree" value="agree" id="agree"> I understand and agree.</label><br>
@@ -158,19 +177,53 @@
               </div>
             </form>
             <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
-
-            <button type="button" class="btn btn-primary center btn-sm" id="cancelTrade" style="width: auto">Cancel and reset</button><br>
+           
+            <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
+            <br>
             <p id="RiskAgreeMessage"> </p>
           </div> 
       </div>
       <div container w-50>
-        <div id="step_six_confirm_trade" style="display: block">
+        <div id="step_six_confirm_trade" style="display: none">
         
         </div>
       </div>       
       
+      </form>
+    <!--//end of whole page form so that reset input works-->
+    </div>
+   
+  <!-- The Modal -->
+            <div class="modal" id="detailModal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+            <!-- Modal header -->
+                  <div class="modal-header">
+                    <h6 class="modal-title">Net Profit or (Loss) Details</h6>
+                    <button type="button" class="close" data-dismmiss="modal">&times;</button>            
+                  </div>
+            <!-- Modal content -->
+                  <div class="modal-body">
+                    <p>Some text in the Modal..</p>
+                  </div> 
+            <!-- Modal Footer -->    
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
 
+                </div> 
+              </div>
+            </div>
+         <!-- end of modal section -->
+
+ 
+  <div>
+    <footer>
+      <p>&copy IntSwaps<sup>TM</sup> LLC 2018.  All rights reserved.
+      </p>
+    </footer>
   </div>
+
   
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
