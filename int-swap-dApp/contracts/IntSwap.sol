@@ -159,6 +159,19 @@ contract IntSwap is Ownable{
         emit Deposited(counterparty, _escrowAmount);
     }
 
+    function escrowDepositsOf(address payee) public view returns (uint256) {
+        require(payee == proposalOwner || payee == counterparty);
+        
+        if(payee == proposalOwner){
+            return proposalAddressToProposalEscrow[payee];
+        }
+        if(payee == counterparty){
+            return counterpartyAddressToCounterpartyAddressEscrow[payee];
+        }
+
+        
+    }
+
     function mintIntSwap (uint _swap_rate) onlyOwner public {
         // IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)];
         ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner]; //this gives us the proposal owner struct
