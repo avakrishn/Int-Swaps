@@ -193,6 +193,7 @@ contract IntSwap is Ownable{
         //divide rates by 120000000 (with 7 zeroes) to convert from annual to monthly and from integer to 7 decimal places
        
         ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];        
+        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
         
         uint VarToFixedGain;
         uint VarToFixedLoss;
@@ -229,6 +230,46 @@ contract IntSwap is Ownable{
         return VarToFixedPayout;
     } 
 
+    function FixedToVarPayoutCalc() public hasMatured returns(uint FixedToVarPayout){
+        //if LIBOR increases (is positive) FixedToVar owner gets a loss
+        //if LIBOR decreases (is negative) FixedToVar owner gets a profit
+        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];        
+        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
+        
+        uint FixedToVarGain;
+        uint FixedToVarLoss;
+        uint end_LIBOR = getEndLibor();
+        uint _swap_rate = int_swap_terms.swap_rate;
+        uint _notional_amount = proposal_owner.notional_amount;
+        uint _escrow_amount;
+        address owner;
+
+        if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(fixedRate)) {
+            _escrow_amount = propsalAddressToPropsalEscrow[propsalOwner].escrow_amount_deposited;
+            owner = propsalOwner;
+        } else {
+            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
+            owner = counterparty;
+        }
+
+        if (end_LIBOR < _swap_rate){
+            FixedToVarGain = _notional_amount * (_swap_rate - end_LIBOR)/120000000;
+        }
+        else if (end_LIBOR >= _swap_rate){
+            FixedToVarLoss = _notional_amount * (end_LIBOR - _swap_rate)/120000000;
+        }
+        else if (FixedToVarGain > _escrow_amount){
+            FixedToVarGain = _escrow_amount;  //ok to replace value of FixedToVarGain variable or shd we use new name?
+        }
+        else if (FixedToVarLoss > _escrow_amount){
+            FixedToVarLoss = _escrow_amount;  //ok to replace value of variable value or shd we use new name?
+        }
+        FixedToVarPayout = _escrow_amount + FixedToVarGain - FixedToVarLoss;
+
+        payments[owner] = FixedToVarPayout;
+
+        return FixedToVarPayout;        
+    }
 
 
 
