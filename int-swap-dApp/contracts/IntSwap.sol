@@ -75,6 +75,15 @@ contract IntSwap is Ownable{
         _;
     }
 
+    modifier hasMatured(){
+        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
+        num++; //need to spend gas in order to get now timestamp
+
+        require (now > int_swap_terms.termEndUnixTimestamp, "Contract has not matured yet.");
+        _;
+
+    }
+
     //run this function to register as the IntSwap contract proposal owner
     //Consider to make this function be called by the proposer
     function registerProposalOwner(uint _notional_amount, uint _owner_input_rate, uint matured_date, string _owner_input_rate_type, address _proposal_owner) onlyOwner public {
@@ -169,21 +178,16 @@ contract IntSwap is Ownable{
         IntSwapTerms memory intswap_terms = IntSwapTerms({total_escrow_amount: totalEscrowAmount, swap_rate: _swap_rate, termStartUnixTimestamp: timeStampStart, termEndUnixTimestamp: proposal_owner.termEndUnixTimestamp});
     }
 
-    function getEndLibor() internal returns(uint end_LIBOR){
+    function getEndLibor() internal hasMatured returns(uint end_LIBOR){
         //this function only called when contract is matured
         //contact oracle (or array for demo) to get one-month LIBOR at beginning of maturity month
-        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
-        num++; //need to spend gas in order to get now timestamp
-
-        require (now < int_swap_terms.termEndUnixTimestamp, "Contract has not matured yet.");
 
         end_LIBOR = msg.data;
 
         return end_LIBOR;
-
     }
 
-    function VarToFixedPayoutCalc() public returns(uint VarToFixedPayout){
+    function VarToFixedPayoutCalc() public hasMatured returns(uint VarToFixedPayout){
         //if LIBOR increases (is positive) VarToFixed owner gets a profit
         //if LIBOR decreases (is negative) VarToFixed owner gets a loss
         //divide rates by 120000000 (with 7 zeroes) to convert from annual to monthly and from integer to 7 decimal places
