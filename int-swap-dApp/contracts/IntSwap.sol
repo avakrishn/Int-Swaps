@@ -8,6 +8,9 @@ pragma solidity ^0.4.18;
 contract IntSwap is Ownable, PullPayment {
     using SafeMath for uint256;
 
+    event Deposited(address indexed payee, uint256 amount);
+    event Withdrawn(address indexed payee, uint256 amount);
+
     struct IntSwapTerms {
         uint total_escrow_amount; // we will only accept ETH for demo. Escrow set at 0.2% of notional amount.
         uint swap_rate; //expressed in 7 decimal points converted to integer--i.e. 0.0239539 or 2.39539% x10000000 is 239539
@@ -132,6 +135,8 @@ contract IntSwap is Ownable, PullPayment {
         require(_escrowAmount == calculateEscrowAmount(_escrowPercent)); //require the proposal owner to send the same amount of calculated escrow
         ProposalEscrow memory propsal_escrow = ProposalEscrow({escrowDepositTimestamp: block.timestamp, escrow_amount_deposited: _escrowAmount});
         propsalAddressToPropsalEscrow[propsalOwner] = propsal_escrow;
+
+        emit Deposited(propsalOwner, _escrowAmount);
     }
 
     function counterpartyDepositIntoEscrow (uint _escrowAmount, uint _escrowPercent) public payable onlyCounterparty {
@@ -140,6 +145,8 @@ contract IntSwap is Ownable, PullPayment {
 
         CounterpartyEscrow memory counterparty_escrow = CounterpartyEscrow({escrowDepositTimestamp: block.timestamp, escrow_amount_deposited: _escrowAmount});
         counterpartyAddressToCounterpartyAddressEscrow[counterparty] = counterparty_escrow;
+
+        emit Deposited(counterparty, _escrowAmount);
     }
 
     function mintIntSwap (uint _swap_rate) onlyOwner public {
