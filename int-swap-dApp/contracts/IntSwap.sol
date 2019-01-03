@@ -53,19 +53,19 @@ contract IntSwap is Ownable{
 
     string public fixedRate = 'fixed';
     string public variableRate = 'variable';
-    address public propsalOwner;
+    address public proposalOwner;
     address public counterparty;
 
     mapping (address => IntSwapTerms) public contractAddressToContractTerms; //this uses the address of the contract to map to the contract terms
-    mapping (address => ProposalOwner) public propsalAddressToProposalOwner; //this uses the address of the proposer to get his information
-    mapping (address => ProposalEscrow) public propsalAddressToPropsalEscrow;
+    mapping (address => ProposalOwner) public proposalAddressToProposalOwner; //this uses the address of the proposer to get his information
+    mapping (address => ProposalEscrow) public proposalAddressToProposalEscrow;
     mapping (address => CounterpartyEscrow) public counterpartyAddressToCounterpartyAddressEscrow;
     mapping (address => uint256) public payments;
   
 
     modifier onlyProposalOwner() {
         // require(msg.sender == contractAddressToContractTerms[address(this)][var_to_fixed_owner],"Only the contract terms propasal owner can call this function.");
-        require(msg.sender == propsalOwner, "Only the contract terms propasal owner can call this function.");
+        require(msg.sender == proposalOwner, "Only the contract terms propasal owner can call this function.");
         _;
     }
 
@@ -92,15 +92,15 @@ contract IntSwap is Ownable{
 
         // if (keccak256(_owner_input_rate_type) == keccak256(fixedRate)) {
         //     IntSwapTerms memory int_swap_terms = IntSwapTerms({fixed_to_var_owner: _proposal_owner});
-        //     propsalOwner = _proposal_owner; //store the address of the propsal owner
+        //     proposalOwner = _proposal_owner; //store the address of the proposal owner
         // } else {
         //     IntSwapTerms memory int_swap_terms = IntSwapTerms({var_to_fixed_owner: _proposal_owner});
-        //     propsalOwner = _proposal_owner;
+        //     proposalOwner = _proposal_owner;
         // }
 
-        propsalOwner = _proposal_owner;
-        //map the proposal owner address to propsal owner struct
-        propsalAddressToProposalOwner[_proposal_owner] = proposal_owner;
+        proposalOwner = _proposal_owner;
+        //map the proposal owner address to proposal owner struct
+        proposalAddressToProposalOwner[_proposal_owner] = proposal_owner;
 
         //map the contract's address to the struct
         // contractAddressToContractTerms[address(this)] = int_swap_terms;
@@ -109,7 +109,7 @@ contract IntSwap is Ownable{
 
     //consider to have the counterparty call this function
     function registerCounterparty(address _counterparty) onlyOwner public {
-        require (propsalOwner != address(0), "Needs to register the proposal owner first");
+        require (proposalOwner != address(0), "Needs to register the proposal owner first");
 
         // IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
 
@@ -133,7 +133,7 @@ contract IntSwap is Ownable{
     function calculateEscrowAmount (uint _escrowPercent) internal returns (uint) {
         //Escrow set at 0.2% of notional (2000 is the converted _escrowPercent)
         // IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)];
-        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];
 
         uint escrow_amount = proposal_owner.notional_amount.mul(_escrowPercent).div(INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
         return escrow_amount;
@@ -143,10 +143,10 @@ contract IntSwap is Ownable{
     function proposerDepositIntoEscrow (uint _escrowAmount, uint _escrowPercent) public payable onlyProposalOwner {
         require(msg.value == _escrowAmount); //msg.value(in wei or ether) has to be the same as the escrow amount
         require(_escrowAmount == calculateEscrowAmount(_escrowPercent)); //require the proposal owner to send the same amount of calculated escrow
-        ProposalEscrow memory propsal_escrow = ProposalEscrow({escrowDepositTimestamp: block.timestamp, escrow_amount_deposited: _escrowAmount});
-        propsalAddressToPropsalEscrow[propsalOwner] = propsal_escrow;
+        ProposalEscrow memory proposal_escrow = ProposalEscrow({escrowDepositTimestamp: block.timestamp, escrow_amount_deposited: _escrowAmount});
+        proposalAddressToProposalEscrow[proposalOwner] = proposal_escrow;
 
-        emit Deposited(propsalOwner, _escrowAmount);
+        emit Deposited(proposalOwner, _escrowAmount);
     }
 
     function counterpartyDepositIntoEscrow (uint _escrowAmount, uint _escrowPercent) public payable onlyCounterparty {
@@ -161,15 +161,15 @@ contract IntSwap is Ownable{
 
     function mintIntSwap (uint _swap_rate) onlyOwner public {
         // IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)];
-        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner]; //this gives us the proposal owner struct
-        ProposalEscrow memory proposal_escrow = propsalAddressToPropsalEscrow[propsalOwner]; //This gives us the proposal escrow struct
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner]; //this gives us the proposal owner struct
+        ProposalEscrow memory proposal_escrow = proposalAddressToProposalEscrow[proposalOwner]; //This gives us the proposal escrow struct
         CounterpartyEscrow memory counterparty_escrow = counterpartyAddressToCounterpartyAddressEscrow[counterparty];
 
-        require (proposal_escrow.escrow_amount_deposited != 0); //making sure propsal owner has deposited the money
+        require (proposal_escrow.escrow_amount_deposited != 0); //making sure proposal owner has deposited the money
         require (counterparty_escrow.escrow_amount_deposited != 0);
         require (proposal_escrow.escrow_amount_deposited == counterparty_escrow.escrow_amount_deposited);
         require (_swap_rate > 0);
-        require (propsalOwner != 0);
+        require (proposalOwner != 0);
         require (counterparty != 0);
 
         uint totalEscrowAmount = proposal_escrow.escrow_amount_deposited.add(counterparty_escrow.escrow_amount_deposited);
@@ -192,7 +192,7 @@ contract IntSwap is Ownable{
         //if LIBOR decreases (is negative) VarToFixed owner gets a loss
         //divide rates by 120000000 (with 7 zeroes) to convert from annual to monthly and from integer to 7 decimal places
        
-        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];        
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
         IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
         
         uint VarToFixedGain;
@@ -204,8 +204,8 @@ contract IntSwap is Ownable{
         address owner;
 
         if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(variableRate)) {
-            _escrow_amount = propsalAddressToPropsalEscrow[propsalOwner].escrow_amount_deposited;
-            owner = propsalOwner;
+            _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
+            owner = proposalOwner;
         } else {
             _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
             owner = counterparty;
@@ -233,7 +233,7 @@ contract IntSwap is Ownable{
     function FixedToVarPayoutCalc() public hasMatured returns(uint FixedToVarPayout){
         //if LIBOR increases (is positive) FixedToVar owner gets a loss
         //if LIBOR decreases (is negative) FixedToVar owner gets a profit
-        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];        
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
         IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
         
         uint FixedToVarGain;
@@ -245,8 +245,8 @@ contract IntSwap is Ownable{
         address owner;
 
         if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(fixedRate)) {
-            _escrow_amount = propsalAddressToPropsalEscrow[propsalOwner].escrow_amount_deposited;
-            owner = propsalOwner;
+            _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
+            owner = proposalOwner;
         } else {
             _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
             owner = counterparty;
