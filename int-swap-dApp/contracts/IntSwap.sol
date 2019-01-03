@@ -1,10 +1,11 @@
 //https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Ownable.sol
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/payment/PullPayment.sol'
 
 pragma solidity ^0.4.18;
 
-contract IntSwap is Ownable {
+contract IntSwap is Ownable, PullPayment {
     using SafeMath for uint256;
 
     struct IntSwapTerms {
@@ -173,6 +174,50 @@ contract IntSwap is Ownable {
         return end_LIBOR;
 
     }
+
+    function VarToFixedPayoutCalc() public returns(uint VarToFixedPayout){
+        //if LIBOR increases (is positive) VarToFixed owner gets a profit
+        //if LIBOR decreases (is negative) VarToFixed owner gets a loss
+        //divide rates by 120000000 (with 7 zeroes) to convert from annual to monthly and from integer to 7 decimal places
+       
+        ProposalOwner memory proposal_owner = propsalAddressToProposalOwner[propsalOwner];        
+        
+        uint VarToFixedGain;
+        uint VarToFixedLoss;
+        uint end_LIBOR = getEndLibor();
+        uint _swap_rate = int_swap_terms.swap_rate;
+        uint _notional_amount = proposal_owner.notional_amount;
+        uint _escrow_amount;
+        address owner;
+
+        if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(variableRate)) {
+            _escrow_amount = propsalAddressToPropsalEscrow[propsalOwner].escrow_amount_deposited;
+            owner = propsalOwner;
+        } else {
+            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
+            owner = counterparty;
+        }
+        
+        if (end_LIBOR > _swap_rate){
+            VarToFixedGain = _notional_amount * (end_LIBOR - _swap_rate)/120000000;
+        }
+        if (end_LIBOR <= _swap_rate){
+            VarToFixedLoss = _notional_amount * (_swap_rate - end_LIBOR)/120000000;
+        }
+        if (VarToFixedGain > _escrow_amount){
+            VarToFixedGain = _escrow_amount; //ok to replace value of variable value or shd we use new name?
+        }
+        if (VarToFixedLoss > _escrow_amount){
+            VarToFixedLoss = _escrow_amount; //ok to replace value of variable value or shd we use new name?
+        }
+        VarToFixedPayout = _escrow_amount + VarToFixedGain - VarToFixedLoss;
+
+        payments[owner] = VarToFixedPayout;
+        
+        return VarToFixedPayout;
+    } 
+
+
 
 
 
