@@ -46,6 +46,7 @@ contract IntSwap is Ownable {
     //     10,000 => 0.01 interest multiplier
     uint public constant INTEREST_RATE_SCALING_FACTOR_PERCENT = 10 ** 4; //10000
     uint public constant INTEREST_RATE_SCALING_FACTOR_MULTIPLIER = INTEREST_RATE_SCALING_FACTOR_PERCENT * 100; //1,000,000
+    uint public num;
 
     string public fixedRate = 'fixed';
     string public variableRate = 'variable';
@@ -159,16 +160,20 @@ contract IntSwap is Ownable {
         IntSwapTerms memory intswap_terms = IntSwapTerms({total_escrow_amount: totalEscrowAmount, swap_rate: _swap_rate, termStartUnixTimestamp: timeStampStart, termEndUnixTimestamp: proposal_owner.termEndUnixTimestamp});
     }
 
-    // function getEndLibor() internal returns(uint end_LIBOR){
-    //     //this function only called when contract is matured
-    //     //contact oracle (or array for demo) to get one-month LIBOR at beginning of maturity month
-    //     require (now > maturity_date, "Contract has not matured yet.");
+    function getEndLibor() internal returns(uint end_LIBOR){
+        //this function only called when contract is matured
+        //contact oracle (or array for demo) to get one-month LIBOR at beginning of maturity month
+        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
+        num++; //need to spend gas in order to get now timestamp
 
-    //     end_LIBOR =  msg.data;
+        require (now < int_swap_terms.termEndUnixTimestamp, "Contract has not matured yet.");
 
-    //     return end_LIBOR;
+        end_LIBOR = msg.data;
 
-    //     }
-    // }
+        return end_LIBOR;
+
+    }
+
+
 
 }
