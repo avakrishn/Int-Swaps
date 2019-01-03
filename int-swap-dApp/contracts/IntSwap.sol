@@ -1,11 +1,10 @@
 //https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Ownable.sol
-import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
-import 'openzeppelin-solidity/contracts/payment/PullPayment.sol'
+import  'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+import  'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
 pragma solidity ^0.4.18;
 
-contract IntSwap is Ownable, PullPayment {
+contract IntSwap is Ownable{
     using SafeMath for uint256;
 
     event Deposited(address indexed payee, uint256 amount);
@@ -61,6 +60,8 @@ contract IntSwap is Ownable, PullPayment {
     mapping (address => ProposalOwner) public propsalAddressToProposalOwner; //this uses the address of the proposer to get his information
     mapping (address => ProposalEscrow) public propsalAddressToPropsalEscrow;
     mapping (address => CounterpartyEscrow) public counterpartyAddressToCounterpartyAddressEscrow;
+    mapping (address => uint256) public payments;
+  
 
     modifier onlyProposalOwner() {
         // require(msg.sender == contractAddressToContractTerms[address(this)][var_to_fixed_owner],"Only the contract terms propasal owner can call this function.");
