@@ -285,7 +285,17 @@ contract IntSwap is Ownable{
         emit Withdrawn(payee, payment);
     }
 
+    function counterpartyOwnerWithdrawPayment() public hasMatured onlyCounterparty {
+        address payee = msg.sender;
+        uint256 payment = payments[payee];
 
+        require(payment != 0);
+        require(address(this).balance >= payment);
 
+        payments[payee] = 0;
 
+        payee.transfer(payment);
+
+        emit Withdrawn(payee, payment);
+    }
 }
