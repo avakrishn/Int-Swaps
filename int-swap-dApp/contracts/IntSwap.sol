@@ -161,7 +161,7 @@ contract IntSwap is Ownable{
 
     function escrowDepositsOf(address payee) public view returns (uint256) {
         require(payee == proposalOwner || payee == counterparty);
-        
+
         if(payee == proposalOwner){
             return proposalAddressToProposalEscrow[payee];
         }
@@ -195,7 +195,7 @@ contract IntSwap is Ownable{
         //this function only called when contract is matured
         //contact oracle (or array for demo) to get one-month LIBOR at beginning of maturity month
 
-        end_LIBOR = msg.data;
+        uint end_LIBOR = msg.data;
 
         return end_LIBOR;
     }
