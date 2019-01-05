@@ -224,6 +224,9 @@ contract IntSwap is Ownable{
         uint _swap_rate = int_swap_terms.swap_rate;
         uint _notional_amount = proposal_owner.notional_amount;
         uint _escrow_amount;
+        uint months = 12;
+        uint MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER = months.mul(INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
+
         address varToFixedOwner;
 
         if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(variableRate)) {
@@ -234,8 +237,6 @@ contract IntSwap is Ownable{
             varToFixedOwner = counterparty;
         }
 
-        uint months = 12;
-        uint MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER = months.mul(INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
         
         // when end_LIBOR gone up they experience a gain
         if (end_LIBOR > _swap_rate){
@@ -265,47 +266,51 @@ contract IntSwap is Ownable{
         return VarToFixedPayout;
     } 
 
-    // function FixedToVarPayoutCalc() public hasMatured onlyOwner returns(uint FixedToVarPayout){
-    //     //if LIBOR increases (is positive) FixedToVar owner gets a loss
-    //     //if LIBOR decreases (is negative) FixedToVar owner gets a profit
-    //     ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
-    //     IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
+    function FixedToVarPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns(uint FixedToVarPayout){
+        //if LIBOR increases (is positive) FixedToVar owner gets a loss
+        //if LIBOR decreases (is negative) FixedToVar owner gets a profit
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
+        IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
         
-    //     uint FixedToVarGain;
-    //     uint FixedToVarLoss;
-    //     // uint end_LIBOR = getEndLibor();
-    //     uint end_LIBOR = _end_LIBOR;
-    //     uint _swap_rate = int_swap_terms.swap_rate;
-    //     uint _notional_amount = proposal_owner.notional_amount;
-    //     uint _escrow_amount;
-    //     address owner;
+        uint FixedToVarGain;
+        uint FixedToVarLoss;
+        // uint end_LIBOR = getEndLibor();
+        uint end_LIBOR = _end_LIBOR;
+        uint _swap_rate = int_swap_terms.swap_rate;
+        uint _notional_amount = proposal_owner.notional_amount;
+        uint _escrow_amount;
+        uint months = 12;
+        uint MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER = months.mul(INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
 
-    //     if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(fixedRate)) {
-    //         _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
-    //         owner = proposalOwner;
-    //     } else {
-    //         _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
-    //         owner = counterparty;
-    //     }
+        address fixedToVarOwner;
+        
 
-    //     if (end_LIBOR < _swap_rate){
-    //         FixedToVarGain = _notional_amount * (_swap_rate - end_LIBOR)/120000000;
-    //     }
-    //     else if (end_LIBOR >= _swap_rate){
-    //         FixedToVarLoss = _notional_amount * (end_LIBOR - _swap_rate)/120000000;
-    //     }
-    //     else if (FixedToVarGain > _escrow_amount){
-    //         FixedToVarGain = _escrow_amount;  //ok to replace value of FixedToVarGain variable or shd we use new name?
-    //     }
-    //     else if (FixedToVarLoss > _escrow_amount){
-    //         FixedToVarLoss = _escrow_amount;  //ok to replace value of variable value or shd we use new name?
-    //     }
-    //     FixedToVarPayout = _escrow_amount + FixedToVarGain - FixedToVarLoss;
+        if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(fixedRate)) {
+            _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
+            fixedToVarOwner = proposalOwner;
+        } else {
+            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
+            fixedToVarOwner = counterparty;
+        }
 
-    //     payeeAddressToPayAmount[owner] = FixedToVarPayout;
+        if (end_LIBOR < _swap_rate){
+            FixedToVarGain = (_notional_amount.mul(_swap_rate.sub(end_LIBOR))).div(MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
+        }
+        if (end_LIBOR >= _swap_rate){
+            FixedToVarLoss = (_notional_amount.mul(end_LIBOR.sub(_swap_rate))).div(MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
+        }
+        if (FixedToVarGain > _escrow_amount){
+            FixedToVarGain = _escrow_amount;  //ok to replace value of FixedToVarGain variable or shd we use new name?
+        }
+        if (FixedToVarLoss > _escrow_amount){
+            FixedToVarLoss = _escrow_amount;  //ok to replace value of variable value or shd we use new name?
+        }
+        FixedToVarPayout = _escrow_amount + FixedToVarGain - FixedToVarLoss;
 
-    //     return FixedToVarPayout;        
-    // }
+        payeeAddressToPayAmount[fixedToVarOwner] = FixedToVarPayout;
+
+        return FixedToVarPayout;        
+    }
 
     function proposalOwnerWithdrawPayment() public hasMatured onlyProposalOwner {
         address payee = msg.sender;
