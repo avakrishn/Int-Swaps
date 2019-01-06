@@ -203,7 +203,7 @@ contract IntSwap is Ownable{
     //     return end_LIBOR;
     // }
 
-    function VarToFixedPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns (uint VarToFixedPayout){
+    function VarToFixedPayoutCalc(uint _end_LIBOR) internal hasMatured onlyOwner returns (uint VarToFixedPayout){
         // 2.9% = 0.029 LIBOR will be scaled to 29,000,000 
         // 0.88% = 0.0088 scaled to 8,800,000 LIBOR
         // _end_LIBOR to be passed into function = 29,000,000
@@ -266,7 +266,7 @@ contract IntSwap is Ownable{
         return VarToFixedPayout;
     } 
 
-    function FixedToVarPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns(uint FixedToVarPayout){
+    function FixedToVarPayoutCalc(uint _end_LIBOR) internal hasMatured onlyOwner returns(uint FixedToVarPayout){
         //if LIBOR increases (is positive) FixedToVar owner gets a loss
         //if LIBOR decreases (is negative) FixedToVar owner gets a profit
         ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
