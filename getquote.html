@@ -1,4 +1,6 @@
-<!-- This will be our Create an Intswap Page -->
+
+<!-- This will be our Create an Intswap Contract Page -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,6 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <link rel="stylesheet" type="text/css" href="css/getquote.css">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,7 +54,9 @@
         <div class="row">
           <div id="step_one_input" class="center">
           <label for "notional_amount">Notional amount of loan principal that IntSwap<sup>TM</sup> would apply to:</label>
-          <input id="notional_amount" type="number" name="notional_amount" placeholder="Loan principal amount that you want to swap interest on...">
+
+          <input id="notional_amount" type="number" name="notional_amount" placeholder="Amount in thousands that you want to swap interest on...">
+
           <label for maturity_month style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
             <div class="d-flex flex-row justify-content-center">
               <select id="maturity_month" type="number">
@@ -88,13 +93,15 @@
           <label for "current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
           <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate" placeholder="%">
           <label for "swap_out_of_rate_type">What rate type do you want to swap out of?</label>
-          <select id="swap_out_of_rate_type" type="text">         
+
+          <select id="swap_out_of_rate_type" type="number">         
             <option>Select</option>
-            <option value="Fixed to Variable">From Fixed into Variable</option>
-            <option value="Variable to Fixed">From Variable into Fixed</option>
+            <option value="1">From Fixed into Variable</option>
+            <option value="2">From Variable into Fixed</option>
           </select>
           <br/>
-          <button type="button" class="btn btn-primary btn-sm center" id="getQuote" style="width: auto">Get a Quote</button>
+          <button type="button" class="btn btn-primary center" id="getQuote" style="width: auto">Get a Quote</button>
+
           </div> 
         </div>
       </div>
@@ -124,34 +131,30 @@
             <table class="d-flex flex-column"> 
               <thead>
                 <h6>Your profit or (loss) would be these amounts (excluding service charges) if LIBOR at the beginning of the maturity month differs from the Swap Contract Rate: </h6>
-                <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit">Link to Details</th>
+
+                <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit" style="text-align: left">Link to Details</th>
               </thead>
               <tbody>
-       <!-- take out next line to test modal instead          
-                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button class="btn btn-sm" 
-                  onclick="getDetails(-3)" id="insert minus_three_result"
-                  >See details</button></td></tr> -->
-   <!--substitute below
-                 <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" id="detailBtn" data-keyboard="true">See details</button></td></tr>-->
+       <!-- take out next line after test querystring method of passing variables:         
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td> <a class="btn btn-sm" id="minus_three" 
+                  href="/detailtemplate.html?notional=100000.50&swaprate=2.88&currentrate=4.00&swaptype=1&escrow=200.00&ratechange=-3.00" target="_blank">See details</a></td></tr> -->
 
-                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" data-toggle="modal" data-target="#detailModal" data-keyboard="true">See details</button></td></tr>
+     
+   <!--style="width: auto" not working on anchor btn-->
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_three"href="#">See details</a></td></tr> 
+                <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_two" href="#">See details</a></td></tr>
+                <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_one" href="#">See details</a></td></tr>
+                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit"></td><td><a  class="btn btn-sm details" id="zero_change" href="#" >See details</a></td></tr>
+                <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_one" href="#">See details</a></td></tr>
+                <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_two" href="#">See details</a></td></tr>
+                <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_three" href="#">See details</a></td></tr>
 
-
-
-
-                <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(-2)" id="minus_two" data-keyboard="true">See details</button></td></tr>
-                <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(-1)" id="minus_one" data-keyboard="true">See details</button></td></tr>
-                <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit">$0.00</td><td><button  class="btn btn-sm" onclick="getDetails(0)" id="zero_change" data-keyboard="true">See details</button></td></tr>
-                <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit">$</td><td><button type="button" class="btn btn-sm"   onclick="getDetails(1)" id="plus_one" data-keyboard="true">See details</button></td></tr>
-                <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit">$</td><td><button type="button" class="btn btn-sm"   onclick="getDetails(2)" id="plus_two" data-keyboard="true">See details</button></td></tr>
-                <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit">$</td><td><button type="button" class="btn btn-sm" onclick="getDetails(3)" id="plus_three" data-keyboard="true">See details</button></td></tr>
               </tbody>
             </table>
           
           </div> 
               <!-- end of step-three-profit-loss-table div-->
 
-             
 
          <div class="row">
           <p id="step_four_display_risks" style="display: none">
@@ -163,7 +166,10 @@
               5. Fluctuations in the value of any Ether or ERC20 token posted as escrow will not be taken into account and all calculations will be based on the original conversion rate in effect at the inception of the contract.<br/>
               6. I realize that I still must make the payment on my own mortgage direct to the holder of my mortgage.<br/>
               7. My profit or loss will be based on the LIBOR variable rate of interest compared to the swap contract rate.<br/>
-              8. Negative LIBOR variable interest rates, if any, will treated as zero for IntSwap payout calculations.</p>
+
+              8. All interest calculations will be based on a 360 day year and 30 day months.<br>
+              9. Negative LIBOR variable interest rates, if any, will treated as zero for IntSwap payout calculations.</p>
+
         </div>
       </div>
       <div class="container w-75 center">
@@ -183,9 +189,37 @@
             <p id="RiskAgreeMessage"> </p>
           </div> 
       </div>
-      <div container w-50>
-        <div id="step_six_confirm_trade" style="display: none">
-        
+
+      <div container>
+        <div id="step_six_confirm_trade" style="display: none; text-align:center">
+           <table class="d-flex flex-column"> 
+              <thead>
+               <caption class="text-center">Your IntSwaps<sup>TM</sup> Trade Confirmation</caption>
+                  <th class="quote">Description</th><th class="quote">Amount/Value</th>
+              </thead>
+              <tbody>
+
+                <tr><td>Your confirmation number</td><td id="insert_confirm_number"></td></tr>
+                <tr><td>Trade Date</td><td id="insert_today"></td></tr>
+                <tr><td>Settlement Date for Escrow to be Remitted</td><td id="insert_today_plus_two"></td></tr>
+                <tr><td>Type of Swap</td><td id="insert_swap_type_confirm"></td></tr>
+                <tr><td>Notional Amount</td><td id="insert_notional_confirm"></td></tr>
+                <tr><td>Maturity Month and Year</td><td id="insert_maturity_month_year_confirm"></td></tr>
+                <tr><td>Your Current Annual Rate</td><td id="insert_current_rate_confirm"></td></tr>
+                <tr><td>Swap Contract Rate</td><td id="insert_swap_rate_confirm"></td></tr>
+                <tr><td>IntSwaps<sup>TM</sup> service charge</td><td>$2.00</td></tr>
+                <tr><td>Escrow Amount Required in US Dollars</td><td id="insert_escrow_dollar_confirm"></td></tr>
+                <tr><td>Exchange rate US Dollars per Ether</td><td id=insert_ether_exchange_rate"></td></tr>
+                <tr><td>Escrow Amount Required in Ether</td><td id="insert_escrow_ether_confirm"></td></tr>
+                <tr><td colspan="2">Congratulations!  You have purchased an IntSwaps<sup>TM</sup> Contract! </td></tr> 
+                <tr><td colspan="2">Please remit your escrow payment in Ether within 48 hours</td></tr>
+                <tr><td colspan="2">to the following contract address (QR code provided)</td></tr>
+                <tr><td colspan="2" id="insert_contract_address_confirm" class="text-center">0xeba6f62f4f7bef9692ecf36cfe3eadf29fd2bed9b</td></tr>
+                <tr><td colspan="2"><img alt="QR-code-contract-address" src="/images/QR-code-contract-address.png" class="center" height="100px" width="100px"></td>
+              </tbody>
+
+            </table>
+
         </div>
       </div>       
       
@@ -193,33 +227,14 @@
     <!--//end of whole page form so that reset input works-->
     </div>
    
-  <!-- The Modal -->
-            <div class="modal" id="detailModal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-            <!-- Modal header -->
-                  <div class="modal-header">
-                    <h6 class="modal-title">Net Profit or (Loss) Details</h6>
-                    <button type="button" class="close" data-dismmiss="modal">&times;</button>            
-                  </div>
-            <!-- Modal content -->
-                  <div class="modal-body">
-                    <p>Some text in the Modal..</p>
-                  </div> 
-            <!-- Modal Footer -->    
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
 
-                </div> 
-              </div>
-            </div>
-         <!-- end of modal section -->
-
+ 
  
   <div>
     <footer>
-      <p>&copy IntSwaps<sup>TM</sup> LLC 2018.  All rights reserved.
+      <br>
+      <p>&copy IntSwaps<sup>TM</sup> LLC 2019.  All rights reserved.
+
       </p>
     </footer>
   </div>

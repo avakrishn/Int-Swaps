@@ -14,6 +14,24 @@ so had to add .btn and .btn-primary styles here to correct*/
 	color: white;
 	background-color: #096EB6;	
 	text-decoration: none;
+
+	text-justify: center;
+	display:inline-block;
+/* tried things below to make "See details" anchors look better:; */
+/*	width: content;
+	text-align: center;
+	display: inline-flex; 
+	display:inline-block; 
+	text-justify: center;
+	display:inline-block;
+	text-justify: center;
+	margin: 0 auto;
+	text-justify: left;
+	justify-content: center;
+	*/
+
+
+
 }
 
 /* Change the color of links on hover */
@@ -22,6 +40,17 @@ a:hover {
 	background-color: #4DB748;
 	text-decoration: none;
 }
+
+
+a.details {
+	display: flex; 
+	text-indent: 0px;
+	text-justify: center;
+	width: 120px;
+	justify-content: center;
+	
+}
+
 
 .btn:hover {
 	color: white;
@@ -51,13 +80,14 @@ td.quote {
 	column-width: 370px;
 
 
-
 }
 
 th.profit {
 	color: #096EB6;
 	text-align: center;
 	column-width: 250px;
+	text-indent: 0px;
+
 
 }
 
@@ -127,49 +157,9 @@ caption {
 
 }
 
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-}
 
-.modal-content {
-  margin: 15% auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-}
 
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-}
 
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-}
-/* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
-  .modal-content {
-    width: 100%;
- 	}
- }
 
 
  

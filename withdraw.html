@@ -47,15 +47,18 @@
         <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">My Wallet</h3>
+
+              <h3 class="panel-title text-center">Matured IntSwaps<sup>TM</sup> Contract</h3>
             </div>
             <div class="panel-body">
-              <h4>Balance</h4>
-              <strong>Balance</strong>: <span id="TTBalance"></span> TT<br/><br/>
-              <h4>Transfer</h4>
-              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Address" />
-              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Amount" />
-              <button class="btn btn-primary" id="transferButton" type="button">Transfer</button>
+              <strong>Contract Number:</strong><span id="insert_contract_number"></span><br/><br/>
+              <strong>Payout Available:</strong> <span id="insert_payout_amount"></span><br/><br/>
+              <strong>Transfer to address:</strong><br/>
+              <input type="text" class="form-control" id="insert_withdraw_address" placeholder="Address you want to send the transfer to" />
+              <strong>Amount to Withdraw:</strong><br/>
+              <input type="text" class="form-control" id="insert_withdraw_amount" placeholder="Amount you want to withdraw" /><br/>
+              <button class="btn btn-primary center" id="transferButton" type="button">Withdraw</button>
+
             </div>
           </div>
         </div>
@@ -64,7 +67,9 @@
     </div>
     <div>
       <footer>
-        <p>&copy IntSwaps<sup>TM</sup> LLC 2018.  All rights reserved.
+
+        <p>&copy IntSwaps<sup>TM</sup> LLC 2019.  All rights reserved.
+
         </p>
       </footer>
     </div>
@@ -76,6 +81,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
+     <script src="js/app.js"></script>
     <script src="js/withdraw.js"></script>
   </body>
 </html>
