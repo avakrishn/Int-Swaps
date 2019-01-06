@@ -20,32 +20,52 @@
     <![endif]-->
   </head>
   <body>
-    <div class="container">
+    <div class="text-center">
+      <header>
+        <img src="images/intswapslogo.png" alt="IntSwaps logo" height="100" width="400">
+      </header>
+       <nav>       
+          <a class="btn btn-primary" role="button" href="#">Home</a>
+          <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+          <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
+          <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="about.html">About Us</a>         
+      </nav>
+    </div>
+    <div class="container w-50">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">TutorialToken</h1>
-          <hr/>
+          <h1 class="text-center" style="color:#096EB6;">What is it?</h1>
           <br/>
         </div>
       </div>
+<!--moved petsRow and TTBalance and TTtransferAddress sections to withdraw.html page -->
 
-      <div id="petsRow" class="row">
-        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">My Wallet</h3>
-            </div>
-            <div class="panel-body">
-              <h4>Balance</h4>
-              <strong>Balance</strong>: <span id="TTBalance"></span> TT<br/><br/>
-              <h4>Transfer</h4>
-              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Address" />
-              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Amount" />
-              <button class="btn btn-primary" id="transferButton" type="button">Transfer</button>
-            </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="center" style="width: 600px">
+          <p>Intswaps is for people who have a variable-rate loan and wish they had a fixed-rate one instead (or vice-versa.) 
+            Are you locked into an ARM (adjustable rate mortgage) and deterred by refinancing costs that average $1500 to $5000 according to Trulia?
+          Intswaps is an easy, inexpensive way to swap your variable rate interest payment for a fixed rate payment on a month by month basis for as many or few monthly payments as you want.</p>
+          <p>
+            You just post refundable escrow in an Ethereum smart contract of 0.2% <a href="#" data-toggle="tooltip" title="The required escrow percentage will vary based on the contract length. It is set at a level that will cover the full profit or loss more than 90% of the time."><sup>?</sup></a> of the loan principal amount that you want the interest rate to apply to. 
+            The decentralized trust system of the Ethereum Virtual Machine will ensure that you receive your escrow plus your profit or minus your loss back at the end of the swap contract. Interested in learning more?  Just go to our no-obligation <a href="./getquote.html" style="font-weight: bold">quote page</a> to see how it would work for you and what your payouts would be in response to future changes in interest rates.
+          </p>
+          <h4 style="color:#096EB6; text-align:center; font-weight: bold">
+             How does it work?           
+          </h4>
+          </div>
+          <div class="text-center">
+          <a class="btn btn-primary" href="variable_to_fixed_example.html">Variable to Fixed Example</a>
+          <a class="btn btn-primary" href="fixed_to_variable_example.html">Fixed to Variable Example</a>
+          <br><br>
+
+           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+           
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

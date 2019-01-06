@@ -1,15 +1,19 @@
 //this file is for getquote.html
+
 var $notional_amount = $('#notional_amount');
+
 var $maturity_month = $('#maturity_month');
 var $maturity_year = $('#maturity_year');
 var $current_annual_rate = $('#current_annual_rate'); //needed for getdetails function
 // var maturity_month_year = maturity_month.maturity_year; //might use this variable later
 var $swap_out_of_rate_type = $('#swap_out_of_rate_type');
+
 var $swap_contract_rate = 2.880;   //hard-code this value for demo
 
 document.getElementById("getQuote").onclick = function() {getQuote()};
 
 document.getElementById("cancelTrade").onclick = function() {cancelTrade()};
+
 
 function getQuote(){
  
@@ -18,6 +22,7 @@ function getQuote(){
       $("#step_three_profit_loss_table").show();
       $("#step_four_display_risks").show();
       $("#step_five_agree").show();
+
       $("#step_six_confirm_trade").hide(); 
           
     var $notional_amount = $('#notional_amount');
@@ -51,6 +56,7 @@ function getQuote(){
     if (swap_out_of_rate_type == "2"){
       var minus_three_result = minus_three_pay_amount - fixed_pay_amount;
       var minus_two_result = minus_two_pay_amount - fixed_pay_amount;
+
       var minus_one_result = minus_one_pay_amount - fixed_pay_amount;
       var zero_change_result = 0;
       var plus_one_result = plus_one_pay_amount - fixed_pay_amount;
@@ -66,8 +72,10 @@ function getQuote(){
           limit_plus_three_result = escrow_amount;
         };
 
+
       document.getElementById("insert_minus_three_result").innerHTML = "$" + limit_minus_three_result.toFixed(2);
       document.getElementById("insert_minus_two_result").innerHTML = "&nbsp;" + minus_two_result.toFixed(2);
+
       document.getElementById("insert_minus_one_result").innerHTML = minus_one_result.toFixed(2);
       document.getElementById("insert_zero_change_result").innerHTML = zero_change_result.toFixed(2);
       document.getElementById("insert_plus_one_result").innerHTML = plus_one_result.toFixed(2);
@@ -76,8 +84,10 @@ function getQuote(){
     
     };
    
+
     //test for fixed to variable = swap type 1
     if (swap_out_of_rate_type == "1"){
+
     //   produces all NaN results if use .valueOf()  
       var minus_three_result = fixed_pay_amount - minus_three_pay_amount;
       var $minus_two_result = fixed_pay_amount - minus_two_pay_amount;
@@ -106,6 +116,7 @@ function getQuote(){
       document.getElementById("insert_plus_three_result").innerHTML = limit_plus_three_result.toFixed(2);
     
     }
+
    
       var detailurl = "/details.html?notional=";
       var matmonth = "&matmonth=";
@@ -150,7 +161,9 @@ function getQuote(){
       document.getElementById("plus_three").href = getPlusThreeHref; 
       
 
+
   }; //end of getQuote function
+
 
 
 
@@ -221,3 +234,4 @@ function confirmTrade(){
 
 
 }  //end of confirmTrade function
+

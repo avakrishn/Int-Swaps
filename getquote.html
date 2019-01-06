@@ -1,4 +1,6 @@
+
 <!-- This will be our Create an Intswap Contract Page -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -52,7 +54,9 @@
         <div class="row">
           <div id="step_one_input" class="center">
           <label for "notional_amount">Notional amount of loan principal that IntSwap<sup>TM</sup> would apply to:</label>
+
           <input id="notional_amount" type="number" name="notional_amount" placeholder="Amount in thousands that you want to swap interest on...">
+
           <label for maturity_month style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
             <div class="d-flex flex-row justify-content-center">
               <select id="maturity_month" type="number">
@@ -89,6 +93,7 @@
           <label for "current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
           <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate" placeholder="%">
           <label for "swap_out_of_rate_type">What rate type do you want to swap out of?</label>
+
           <select id="swap_out_of_rate_type" type="number">         
             <option>Select</option>
             <option value="1">From Fixed into Variable</option>
@@ -96,6 +101,7 @@
           </select>
           <br/>
           <button type="button" class="btn btn-primary center" id="getQuote" style="width: auto">Get a Quote</button>
+
           </div> 
         </div>
       </div>
@@ -125,6 +131,7 @@
             <table class="d-flex flex-column"> 
               <thead>
                 <h6>Your profit or (loss) would be these amounts (excluding service charges) if LIBOR at the beginning of the maturity month differs from the Swap Contract Rate: </h6>
+
                 <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit" style="text-align: left">Link to Details</th>
               </thead>
               <tbody>
@@ -141,11 +148,13 @@
                 <tr><td>+1.0%</td><td id="insert_plus_one_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_one" href="#">See details</a></td></tr>
                 <tr><td>+2.0%</td><td id="insert_plus_two_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_two" href="#">See details</a></td></tr>
                 <tr><td>+3.0%</td><td id="insert_plus_three_result" class="profit"></td><td><a class="btn btn-sm details" id="plus_three" href="#">See details</a></td></tr>
+
               </tbody>
             </table>
           
           </div> 
               <!-- end of step-three-profit-loss-table div-->
+
 
          <div class="row">
           <p id="step_four_display_risks" style="display: none">
@@ -157,8 +166,10 @@
               5. Fluctuations in the value of any Ether or ERC20 token posted as escrow will not be taken into account and all calculations will be based on the original conversion rate in effect at the inception of the contract.<br/>
               6. I realize that I still must make the payment on my own mortgage direct to the holder of my mortgage.<br/>
               7. My profit or loss will be based on the LIBOR variable rate of interest compared to the swap contract rate.<br/>
+
               8. All interest calculations will be based on a 360 day year and 30 day months.<br>
               9. Negative LIBOR variable interest rates, if any, will treated as zero for IntSwap payout calculations.</p>
+
         </div>
       </div>
       <div class="container w-75 center">
@@ -178,6 +189,7 @@
             <p id="RiskAgreeMessage"> </p>
           </div> 
       </div>
+
       <div container>
         <div id="step_six_confirm_trade" style="display: none; text-align:center">
            <table class="d-flex flex-column"> 
@@ -207,6 +219,7 @@
               </tbody>
 
             </table>
+
         </div>
       </div>       
       
@@ -214,12 +227,14 @@
     <!--//end of whole page form so that reset input works-->
     </div>
    
+
  
  
   <div>
     <footer>
       <br>
       <p>&copy IntSwaps<sup>TM</sup> LLC 2019.  All rights reserved.
+
       </p>
     </footer>
   </div>
