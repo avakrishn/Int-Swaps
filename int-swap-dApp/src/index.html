@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>IntSwap Home</title>
+    <title>IntSwaps Home</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -29,26 +29,27 @@
           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
           <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
           <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
+          <a class="btn btn-primary" href="faq.html">FAQ</a>
           <a class="btn btn-primary" href="about.html">About Us</a>         
       </nav>
     </div>
     <div class="container w-50">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center" style="color:#096EB6;">What is it?</h1>
-          <br/>
+          <h2 class="text-center" style="color:#096EB6;">What is it?</h2>
+          <h4 class="text-center" style="color:#096EB6; font-weight: bold">A New Risk Management Tool <br> A New Asset Class for Investors</h4>
         </div>
       </div>
 <!--moved petsRow and TTBalance and TTtransferAddress sections to withdraw.html page -->
 
       <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-          <div class="center" style="width: 600px">
-          <p>Intswaps is for people who have a variable-rate loan and wish they had a fixed-rate one instead (or vice-versa.) 
+          <div class="center" style="width: 550px">
+          <p style="text-align: justify">Intswaps<sup>TM</sup> is for people who have a variable-rate loan and wish they had a fixed-rate one instead (or vice-versa.) 
             Are you locked into an ARM (adjustable rate mortgage) and deterred by refinancing costs that average $1500 to $5000 according to Trulia?
           Intswaps is an easy, inexpensive way to swap your variable rate interest payment for a fixed rate payment on a month by month basis for as many or few monthly payments as you want.</p>
-          <p>
-            You just post refundable escrow in an Ethereum smart contract of 0.2% <a href="#" data-toggle="tooltip" title="The required escrow percentage will vary based on the contract length. It is set at a level that will cover the full profit or loss more than 90% of the time."><sup>?</sup></a> of the loan principal amount that you want the interest rate to apply to. 
+          <p style="text-align: justify">
+            You just post refundable escrow in an Ethereum smart contract of 0.2% <a href="#" data-toggle="tooltip" title="The required escrow percentage is set at a level that will cover the full profit or loss more than 90% of the time."><sup class="question_mark">?</sup></a> of the loan principal amount that you want the interest rate to apply to (e.g. $200 for an IntSwaps<sup>TM</sup> contract on a $100,000 notional loan amount.) 
             The decentralized trust system of the Ethereum Virtual Machine will ensure that you receive your escrow plus your profit or minus your loss back at the end of the swap contract. Interested in learning more?  Just go to our no-obligation <a href="./getquote.html" style="font-weight: bold">quote page</a> to see how it would work for you and what your payouts would be in response to future changes in interest rates.
           </p>
           <h4 style="color:#096EB6; text-align:center; font-weight: bold">
@@ -60,13 +61,20 @@
           <a class="btn btn-primary" href="fixed_to_variable_example.html">Fixed to Variable Example</a>
           <br><br>
 
-           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+           <a class="btn btn-primary btn-lg" href="getquote.html">Get a Quote</a>
            
           </div>
         </div>
       </div>
 
     </div>
+     <div>
+      <br>
+    <footer>
+      <p>&copy IntSwaps<sup>TM</sup> LLC 2018.  All rights reserved.
+      </p>
+    </footer>
+  </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -74,6 +82,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/home.js"></script>
   </body>
 </html>

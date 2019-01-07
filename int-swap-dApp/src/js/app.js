@@ -1,4 +1,11 @@
 // Js file for intswap.html but name changed to getquote.html
+
+$notional_amount = $('#notional_amount');
+$maturity_date = $('#maturity_date');
+$current_annual_rate = $('#current_annual_rate');
+$swap_out_of_rate_type = $('#swap_out_of_rate_type');
+
+
 App = {
   web3Provider: null,
   contracts: {},
@@ -40,6 +47,7 @@ App = {
   bindEvents: function() {
     $(document).on('click', '#transferButton', App.handleTransfer);
     $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+    $(document).on('click', '#placeTrade', App.createContract);
   },
 
 
@@ -96,31 +104,35 @@ App = {
     });
   },
 
-  getBalances: function() {
-    console.log('Getting balances...');
+  // getBalances: function() {
+  //   console.log('Getting balances...');
 
-    var tutorialTokenInstance;
+  //   var tutorialTokenInstance;
 
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
+  //   web3.eth.getAccounts(function(error, accounts) {
+  //     if (error) {
+  //       console.log(error);
+  //     }
 
-      var account = accounts[0];
+  //     var account = accounts[0];
 
-      App.contracts.TutorialToken.deployed().then(function(instance) {
-        tutorialTokenInstance = instance;
+  //     App.contracts.TutorialToken.deployed().then(function(instance) {
+  //       tutorialTokenInstance = instance;
 
-        return tutorialTokenInstance.balanceOf(account);
-      }).then(function(result) {
-        balance = result.c[0];
+  //       return tutorialTokenInstance.balanceOf(account);
+  //     }).then(function(result) {
+  //       balance = result.c[0];
 
-        $('#TTBalance').text(balance);
-      }).catch(function(err) {
-        console.log(err.message);
-      });
-    });
-  }
+  //       $('#TTBalance').text(balance);
+  //     }).catch(function(err) {
+  //       console.log(err.message);
+  //     });
+  //   });
+  // },
+
+  // createContract: function () {
+
+  // }
 
 };
 

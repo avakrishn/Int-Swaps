@@ -30,6 +30,7 @@
           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
           <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
           <a class="btn btn-primary" role="button" href="#">Withdraw</a>
+          <a class="btn btn-primary" href="faq.html">FAQ</a>
           <a class="btn btn-primary" href="about.html">About Us</a>       
       </nav>
     </div>
@@ -37,8 +38,7 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
-            <h2 class="text-center" style="color:#096EB6;">Make a Withdrawal</h2>
-            <hr/>
+            <h2>Make a Withdrawal</h2>
             <br/>
         </div>
       </div>
@@ -47,27 +47,41 @@
         <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">My Wallet</h3>
+
+              <h3 class="panel-title text-center">Matured IntSwaps<sup>TM</sup> Contract</h3>
             </div>
             <div class="panel-body">
-              <h4>Balance</h4>
-              <strong>Balance</strong>: <span id="TTBalance"></span> TT<br/><br/>
-              <h4>Transfer</h4>
-              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Address" />
-              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Amount" />
-              <button class="btn btn-primary" id="transferButton" type="button">Transfer</button>
+              <strong>Contract Number:</strong><span id="insert_contract_number"></span><br/><br/>
+              <strong>Payout Available:</strong> <span id="insert_payout_amount"></span><br/><br/>
+              <strong>Transfer to address:</strong><br/>
+              <input type="text" class="form-control" id="insert_withdraw_address" placeholder="Address you want to send the transfer to" />
+              <strong>Amount to Withdraw:</strong><br/>
+              <input type="text" class="form-control" id="insert_withdraw_amount" placeholder="Amount you want to withdraw" /><br/>
+              <button class="btn btn-primary center" id="transferButton" type="button">Withdraw</button>
+
             </div>
           </div>
         </div>
       </div>
 
     </div>
+    <div>
+      <footer>
+
+        <p>&copy IntSwaps<sup>TM</sup> LLC 2019.  All rights reserved.
+
+        </p>
+      </footer>
+    </div>
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
+     <script src="js/app.js"></script>
     <script src="js/withdraw.js"></script>
   </body>
 </html>
