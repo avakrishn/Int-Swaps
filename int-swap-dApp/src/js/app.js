@@ -1,11 +1,29 @@
 // Js file for intswap.html but name changed to getquote.html
 
-$notional_amount = $('#notional_amount');
-$maturity_month = $('#maturity_month');
-$maturity_year= $('#maturity_year');
-$current_annual_rate = $('#current_annual_rate');
-$swap_out_of_rate_type = $('#swap_out_of_rate_type');
-$proposal_owner_address = $('#proposal_owner_address');
+var $notional_amount = $('#notional_amount');
+var $maturity_month = $('#maturity_month');
+var $maturity_year= $('#maturity_year');
+var $current_annual_rate = $('#current_annual_rate');
+var $swap_out_of_rate_type = $('#swap_out_of_rate_type');
+var $proposal_owner_address = $('#proposal_owner_address');
+
+var price_in_usd_for_one_eth;
+
+var escrow_percent = 2000000;
+var swap_contract_rate_scaled  = 28800000; 
+
+$.ajax({
+  type: "GET",
+  url: "https://api.coinmarketcap.com/v1/ticker/ethereum/",
+  dataType: "json",
+  success: function(result){
+    price_in_usd_for_one_eth = result[0].price_usd;
+  },
+  error: function(err){
+      console.log(err);
+  }
+  });
+
 
 
 App = {
@@ -144,21 +162,39 @@ App = {
       }else{
           rate_type = "variable";
       }
-
-      return intSwapInstance.registerProposalOwner($notional_amount.val(),$current_annual_rate.val(),unix_maturity_date, rate_type, $proposal_owner_address.val());
-    }).then(function(result){
+    
       var notional_amount = $notional_amount.val();
       var escrow_amount = 0.002 * notional_amount;
-      var escrow_percent = 2000000;
-      var swap_contract_rate_scaled  = 28800000; 
+
+      eth_notional_amount = notional_amount/price_in_usd_for_one_eth;
+      wei_notional_amount = Math.pow(10, 18) * eth_notional_amount;
+
+      eth_escrow_amount = escrow_amount/price_in_usd_for_one_eth;
+      wei_escrow_amount = Math.pow(10, 18) * eth_escrow_amount;
+
+      return intSwapInstance.registerProposalOwner(wei_notional_amount, $current_annual_rate.val(), unix_maturity_date, rate_type, $proposal_owner_address.val());
+
+    }).then(function(result){
+      return intSwapInstance.proposalAddressToProposalOwner.call($proposal_owner_address.val());
 
       
-      // myContractInstance.depositFunds({from: web3.eth.accounts[0], gas: 3000000, value: 100}, function(err, res){});
-      return intSwapInstance.proposerDepositIntoEscrow(escrow_amount, escrow_percent, {from: $proposal_owner_address.val(), gas:3000000, value: escrow_amount})
-
     }).then(function(res){
-        console.log(res);
-    
+      console.log(res);
+      console.log(wei_notional_amount);
+      console.log(wei_escrow_amount);
+      return intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, {from: $proposal_owner_address.val(), gas:3000000, value: wei_escrow_amount})
+      
+      // pattern for deposit eth into account
+      // myContractInstance.depositFunds({from: web3.eth.accounts[0], gas: 3000000, value: 100}, function(err, res){});
+
+
+    }).then(function(result){
+      return intSwapInstance.proposalAddressToProposalEscrow.call($proposal_owner_address.val());
+
+      
+    }).then(function(res){
+      console.log(res);
+
     }).catch(function(err) {
         console.log(err.message);
     });
