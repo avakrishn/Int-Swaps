@@ -99,6 +99,7 @@ App = {
       // Set the provider for our contract.
       App.contracts.IntSwap.setProvider(App.web3Provider);
 
+      // return App.bindEvents inside this $.getJSON function so that we return at the end of this function
       return App.bindEvents();
 
     });
