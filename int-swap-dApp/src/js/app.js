@@ -19,7 +19,7 @@ var $proposed_int_swap = $('#proposed_int_swap');
 var price_in_usd_for_one_eth;
 
 var escrow_percent = 2000000;
-var swap_contract_rate = 2.88;
+var swap_contract_rate_percent = 2.88;
 var swap_contract_rate_scaled = 28800000;
 
 
@@ -41,7 +41,7 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     var $notional_amount = $('<h5>').attr('class', 'card-text').text(`Notional Amount: ${notional_amount}`);
     var $proposer = $('<h5>').attr('class', 'card-text').text(`Proposer is swapping out of current ${proposer_rate_type} rate of ${proposer_input_rate.toFixed(2)}% into ${alternative_rate} rate`);
     var $counterparty = $('<h5>').attr('class', 'card-text').text(`As the counterparty you will swap out of ${alternative_rate} into ${proposer_rate_type} rate`);
-    var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate}%`);
+    var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
     var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
     var $counterparty_input_label = $('<label class="mr-3">').text(`Enter Your Address to Become the Counterparty:`);
     var $counterparty_input = $('<input class="container d-block w-75" id="counterparty_owner_address">').attr('type', 'text');
