@@ -1,0 +1,7 @@
+p.bullets::before {
+    content: ' \2023';
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  

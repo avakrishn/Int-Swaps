@@ -24,6 +24,11 @@ a:hover {
   	margin-right: auto;
 }
 
+h2 {
+	color: #096EB6;
+	text-align: center;
+}
+
 h3 {
 	color: #096EB6;
 	font-weight: bold;
@@ -31,6 +36,16 @@ h3 {
 }
 
 sup {
-  	font-weight: bold;
-  	font-size: 14px;
+	font-size: 9px;
 }
+
+sup.question_mark {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+footer {
+ 	color: #096EB6;
+ 	text-align: center;
+ }
+
