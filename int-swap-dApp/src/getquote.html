@@ -101,9 +101,6 @@
             <option value="2">From Variable into Fixed</option>
           </select>
 
-          <label>Enter Your Address</label>
-          <input id="proposal_owner_address" type="text">
-
           <br/>
           <button type="button" class="btn btn-primary center" id="getQuote" style="width: auto">Get a Quote</button>
 
@@ -119,13 +116,13 @@
                   <th class="quote">Description</th><th class="quote">Amount/Value</th>
                 </thead>
                 <tbody>
-                  <tr><td>Notional Amount</td><td id="insert_notional_amount" class="quote">$</td></tr>
-                  <tr><td text-indent>Swap Month/Year</td><td id="insert_month_year" class="quote"></td></tr>
-                  <tr><td>Your Current %</td><td id="insert_current_annual_rate" class="quote">%</td></tr>
-                  <tr><td>Swap From/To</td><td id="insert_swap_out_of_rate_type" class="quote"></td></tr>
-                  <tr><td>Escrow Amount</td><td id="insert_escrow_amount" class="quote"></td></tr>
-                  <tr><td>Swap Contract %</td><td id="insert_swap_rate" class="quote"></td></tr>
-                  <tr><td>Service charge</td><td class="quote">$2.00</td></tr>
+                  <tr><td class="quote_label">Notional Amount</td><td id="insert_notional_amount" class="quote">$</td></tr>
+                  <tr><td class="quote_label">Maturity Month/Year</td><td id="insert_month_year" class="quote"></td></tr>
+                  <tr><td class="quote_label">Your Current %</td><td id="insert_current_annual_rate" class="quote">%</td></tr>
+                  <tr><td class="quote_label">Swap From/To</td><td id="insert_swap_out_of_rate_type" class="quote"></td></tr>
+                  <tr><td class="quote_label">Escrow Amount</td><td id="insert_escrow_amount" class="quote"></td></tr>
+                  <tr><td class="quote_label">Swap Contract %</td><td id="insert_swap_rate" class="quote"></td></tr>
+                  <tr><td class="quote_label">Service charge</td><td class="quote">$2.00</td></tr>
                 </tbody>
               </table>
             </div>
@@ -187,9 +184,14 @@
               <label><input type="radio" name="riskAgree" value="disagree" id="disagree"> I do not understand/agree.</label><br><br>
               </div>
             </form>
-            <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
-           
-            <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
+
+            <label>Enter Your Address</label>
+            <input class="w-100 mb-3" id="proposal_owner_address" type="text">
+            <div class="d-flex flex-row">
+                <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
+                <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
+            </div>
+            
             <br>
             <p id="RiskAgreeMessage"> </p>
           </div> 
