@@ -129,42 +129,46 @@ App = {
     }).then(function (result){
     
 
-        console.log(result);
+        console.log("Proposal Owner: ",result);
 
         var promises = [];
 
-        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(result), intSwapInstance.proposalAddressToProposalEscrow.call(result));
+        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(result), intSwapInstance.proposalAddressToProposalEscrow.call(result), intSwapInstance.counterparty.call());
 
 
         return Promise.all(promises);
 
     }).then(function (result){
-      var proposal_owner_struct = result[0];
-      var proposal_owner_escrow = result[1];
-      var p_escrow = proposal_owner_escrow[1];
+      console.log("Counterparty Owner: ",result[2]);
 
-      // convert notional amount in wei to notional amount in USD
-      var p_wei_notional_amount = proposal_owner_struct[0];
-      var p_eth_notional_amount = p_wei_notional_amount/ Math.pow(10, 18);
-      var p_notional_amount = p_eth_notional_amount * price_in_usd_for_one_eth;
-      p_notional_amount = parseInt(p_notional_amount);
+      if(result[2] == "0x0000000000000000000000000000000000000000"){
+        var proposal_owner_struct = result[0];
+        var proposal_owner_escrow = result[1];
+        var p_escrow = proposal_owner_escrow[1];
 
-      // proposal owner input rate
-      var p_owner_input_rate = proposal_owner_struct[1];
-      p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
-      p_owner_input_rate = p_owner_input_rate * 100;
+        // convert notional amount in wei to notional amount in USD
+        var p_wei_notional_amount = proposal_owner_struct[0];
+        var p_eth_notional_amount = p_wei_notional_amount/ Math.pow(10, 18);
+        var p_notional_amount = p_eth_notional_amount * price_in_usd_for_one_eth;
+        p_notional_amount = parseInt(p_notional_amount);
 
-      // maturity end date
-      var date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
-      date = date.toString().split(" ");
-      date = `${date[1]} ${date[3]}`
+        // proposal owner input rate
+        var p_owner_input_rate = proposal_owner_struct[1];
+        p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
+        p_owner_input_rate = p_owner_input_rate * 100;
 
-      // proposal owner will swap out of p_swap_out_rate
-      var p_swap_out_rate = proposal_owner_struct[3];
-      
-      var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
+        // maturity end date
+        var date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
+        date = date.toString().split(" ");
+        date = `${date[1]} ${date[3]}`
 
-      $proposed_int_swap.html(card);
+        // proposal owner will swap out of p_swap_out_rate
+        var p_swap_out_rate = proposal_owner_struct[3];
+        
+        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
+
+        $proposed_int_swap.html(card);
+      }
 
     }).catch(function (err) {
       console.log(err);
