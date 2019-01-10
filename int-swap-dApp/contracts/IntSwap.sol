@@ -86,8 +86,9 @@ contract IntSwap is Ownable{
 
     //run this function to register as the IntSwap contract proposal owner
     //Consider to make this function be called by the proposer
-    function registerProposalOwner(uint _notional_amount, uint _owner_input_rate, uint matured_date, string _owner_input_rate_type, address _proposal_owner) onlyOwner public {
+    function registerProposalOwner(uint _notional_amount, uint _owner_input_rate, uint matured_date, string _owner_input_rate_type, address _proposal_owner) public {
         require(proposalAddressToProposalOwner[proposalOwner].notional_amount == 0);
+        require( _proposal_owner == msg.sender);
 
         ProposalOwner memory proposal_owner = ProposalOwner({notional_amount: _notional_amount, owner_input_rate: _owner_input_rate, termEndUnixTimestamp: matured_date, owner_input_rate_type: _owner_input_rate_type});
 
@@ -108,10 +109,12 @@ contract IntSwap is Ownable{
 
     }
 
+
     //consider to have the counterparty call this function
-    function registerCounterparty(address _counterparty) onlyOwner public {
+    function registerCounterparty(address _counterparty) public {
         require (proposalOwner != address(0), "Needs to register the proposal owner first");
         require(counterparty == address(0));
+        require(_counterparty == msg.sender);
         // IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
 
         //check if the address is not set. address(0) == empty address
@@ -147,10 +150,10 @@ contract IntSwap is Ownable{
         require(_escrowAmount == calculateEscrowAmount(_escrowPercent)); //require the proposal owner to send the same amount of calculated escrow
         require(proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited == 0);
         
-        ProposalEscrow memory proposal_escrow = ProposalEscrow({escrowDepositTimestamp: block.timestamp, escrow_amount_deposited: _escrowAmount});
+        ProposalEscrow memory proposal_escrow = ProposalEscrow({escrowDepositTimestamp: now, escrow_amount_deposited: _escrowAmount});
         proposalAddressToProposalEscrow[proposalOwner] = proposal_escrow;
 
-        emit Deposited(proposalOwner, _escrowAmount, block.timestamp);
+        emit Deposited(proposalOwner, _escrowAmount, now);
     }
 
     function counterpartyDepositIntoEscrow (uint _escrowAmount, uint _escrowPercent) public payable onlyCounterparty {

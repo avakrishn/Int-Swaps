@@ -71,15 +71,18 @@ label {
 th.quote {
 	color: #096EB6;
 	text-align: center;
-	column-width: 370px;
+	column-width: 270px;
    
 }
 
 td.quote {
 	text-align: center;
-	column-width: 370px;
+	column-width: 170px;
 
+}
 
+td.quote_label{
+	column-width: 270px;
 }
 
 th.profit {
@@ -93,7 +96,7 @@ th.profit {
 
 td.profit {
 	text-align: center;
-	column-width: 250px;
+	column-width: 270px;
 	
 }
 th.details {
@@ -106,6 +109,7 @@ th.details {
 td {
 	text-align: left;
 	text-indent: 55px;
+	/* column-width: 270px; */
 }
 
 /* Have to override h2 style because title is picking up styling from bootstrapcdn so
