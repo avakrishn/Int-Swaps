@@ -143,7 +143,9 @@ App = {
     }).then(function (result){
       var proposal_owner_struct = result[0];
       var proposal_owner_escrow = result[1];
+      var counterparty_escrow = result[2];
       var p_escrow = proposal_owner_escrow[1];
+      var c_escrow = counterparty_escrow[1]
       debugger
 
       // convert notional amount in wei to notional amount in USD
