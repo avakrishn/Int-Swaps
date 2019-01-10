@@ -12,8 +12,13 @@ var eth_notional_amount;
 var wei_notional_amount;
 var eth_escrow_amount;
 var wei_escrow_amount;
+var c_deposited_escrow_amount;
+var p_deposited_escrow_amount;
+let proposerAddress;
+let counterpartyAddress;
 
 var $proposed_int_swap = $('#proposed_int_swap');
+var $mint_int_swap = $('#mint_int_swap');
 
 
 var price_in_usd_for_one_eth;
@@ -52,6 +57,45 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     return $cardContainer;
   }
 
+}
+
+function intSwapCard(notional_amount, p_owner_input_rate, end_date, proposer_rate_type, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount ){
+
+  let total_deposited_escrow = p_deposited_escrow_amount + c_deposited_escrow_amount;
+
+    var alternative_rate;
+
+    if(proposer_rate_type == "fixed"){
+        alternative_rate = "variable"
+    }else{
+      alternative_rate = "fixed"
+    }
+
+    var $cardContainer = $('<div>').attr('class', 'card justify-content-center text-center p-1 mt-5');
+
+    var $cardBody = $('<div>').attr('class', 'card-body');
+    var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').text(`Summary of IntSwap Contract to be Minted`);
+    var $notional_amount = $('<h5>').attr('class', 'card-text').text(`Notional Amount: ${notional_amount}`);
+    var $proposer = $('<h5>').attr('class', 'card-text').text(`Proposer is swapping out of current ${proposer_rate_type} rate of ${p_owner_input_rate.toFixed(2)}% into ${alternative_rate} rate`);
+    var $proposerEscrow = $('<h5>').attr('class', 'card-text').text(`Proposer has deposited $${p_deposited_escrow_amount} into escrow from address ${proposerAddress}.`);
+    var $counterpartyEscrow = $('<h5>').attr('class', 'card-text').text(`Counterparty has deposited $${c_deposited_escrow_amount} into escrow from address ${counterpartyAddress}.`);
+    var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
+    var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
+    var $counterparty_input_label = $('<label class="mr-3">').text(`Enter the above Swap Rate to Confirm the IntSwap Contract.`);
+    var $counterparty_input = $('<input class="container d-block w-75" id="swap_rate_input">').attr('type', 'text');
+    var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-swaprate=${swap_contract_rate_percent} id="mintIntswap" style="width: auto">Mint IntSwap</button>`);
+
+    $cardBody.append($cardTitle, $notional_amount, $proposer, $proposerEscrow, $counterpartyEscrow, $swap_rate, $maturity_date, $counterparty_input_label, $counterparty_input, $enter_button);
+    $cardContainer.append($cardBody);
+    return $cardContainer;
+
+
+
+}
+
+function displayIntSwapTX(transactionHash) {
+  var $tx = $('<h5>').attr('class', 'card-text').text(`IntSwap Minted Successfully: ${transactionHash}`);
+  return $tx
 }
 
 $.ajax({
@@ -112,6 +156,7 @@ App = {
     $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
+    $(document).on('click', '#mintIntswap', App.mintIntSwap);
 
     App.grabState();
   },
@@ -131,8 +176,8 @@ App = {
 
     }).then(function (result){
 
-        let proposerAddress = result[0];
-        let counterpartyAddress = result[1];
+        proposerAddress = result[0];
+        counterpartyAddress = result[1];
 
         var promises = [];
 
@@ -143,36 +188,50 @@ App = {
     }).then(function (result){
       var proposal_owner_struct = result[0];
       var proposal_owner_escrow = result[1];
-      var counterparty_escrow = result[2];
       var p_escrow = proposal_owner_escrow[1];
-      var c_escrow = counterparty_escrow[1]
-      debugger
+      var counterparty_escrow = result[2];
+      var c_escrow = counterparty_escrow[1];
 
-      // convert notional amount in wei to notional amount in USD
+      //calculate counterparty deposited escrow amount
+      var c_eth_ecrow_amount = c_escrow/ Math.pow(10, 18);
+      var c_escrow_amount = c_eth_ecrow_amount * price_in_usd_for_one_eth;
+      c_deposited_escrow_amount = parseInt(c_escrow_amount);
+
+      //calculate proposer deposited escrow amount
+      var p_eth_ecrow_amount = p_escrow/ Math.pow(10, 18);
+      var p_escrow_amount = p_eth_ecrow_amount * price_in_usd_for_one_eth;
+      p_deposited_escrow_amount = parseInt(p_escrow_amount);
+
+      //convert notional amount in wei to notional amount in USD
       var p_wei_notional_amount = proposal_owner_struct[0];
       var p_eth_notional_amount = p_wei_notional_amount/ Math.pow(10, 18);
       var p_notional_amount = p_eth_notional_amount * price_in_usd_for_one_eth;
       p_notional_amount = parseInt(p_notional_amount);
-      debugger
 
       // proposal owner input rate
       var p_owner_input_rate = proposal_owner_struct[1];
       p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
       p_owner_input_rate = p_owner_input_rate * 100;
-      debugger
+
       // maturity end date
       var date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
       date = date.toString().split(" ");
       date = `${date[1]} ${date[3]}`
-      debugger
+
       // proposal owner will swap out of p_swap_out_rate
       var p_swap_out_rate = proposal_owner_struct[3];
 
-      var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
 
-      debugger
 
-      $proposed_int_swap.html(card);
+      if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
+        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
+
+        $proposed_int_swap.html(card);
+      }
+
+      var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
+
+      $mint_int_swap.html(mintInswapCard);
 
     }).catch(function (err) {
       console.log(err);
@@ -304,6 +363,35 @@ App = {
 
     }).then(function (res) {
       console.log(res);
+
+    }).catch(function (err) {
+      console.log(err.message);
+    });
+
+
+  },
+  mintIntSwap: function (event) {
+    event.preventDefault();
+    var intSwapInstance;
+    App.contracts.IntSwap.deployed().then(function (instance) {
+      intSwapInstance = instance;
+
+      $input_swap_rate = $('#swap_rate_input').val();
+      $contract_swap_rate = $("#mintIntswap").attr('data-swaprate');
+
+      if ($input_swap_rate !== $contract_swap_rate) {
+        return alert("Please enter the correct Swap Rate")
+      }
+
+      return intSwapInstance.mintIntSwap(swap_contract_rate_scaled);
+
+    }).then(function (res) {
+      console.log(res);
+      var intSwap_tx = res.tx;
+      var intSwapMessage = displayIntSwapTX(intSwap_tx);
+      $mint_int_swap.append(intSwapMessage);
+      debugger
+
 
     }).catch(function (err) {
       console.log(err.message);
