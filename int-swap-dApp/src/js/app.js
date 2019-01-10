@@ -1,5 +1,5 @@
 // Js file for intswap.html but name changed to getquote.html
-
+$contract_address;
 var $notional_amount = $('#notional_amount');
 var $maturity_month = $('#maturity_month');
 var $maturity_year = $('#maturity_year');
@@ -16,6 +16,8 @@ var c_deposited_escrow_amount;
 var p_deposited_escrow_amount;
 let proposerAddress;
 let counterpartyAddress;
+var variable_to_fixed_payee;
+var fixed_to_variable_payee;
 
 var $proposed_int_swap = $('#proposed_int_swap');
 var $mint_int_swap = $('#mint_int_swap');
@@ -94,8 +96,47 @@ function intSwapCard(notional_amount, p_owner_input_rate, end_date, proposer_rat
 }
 
 function displayIntSwapTX(transactionHash) {
+  var mintIntSwapResult =  $('<div>');
   var $tx = $('<h5>').attr('class', 'card-text').text(`IntSwap Minted Successfully: ${transactionHash}`);
-  return $tx
+
+  var getPayout_VarToFixed = cal_payout_VarToFixed();
+  var getPayout_FixedToVar = cal_payout_FixedToVar()
+
+  mintIntSwapResult.append($tx, getPayout_VarToFixed, getPayout_FixedToVar);
+  return mintIntSwapResult
+}
+
+
+function cal_payout_VarToFixed() {
+  var $varToFixedCalLabel = $('<label class="mr-3">').text(`Variable to Fixed Payout`);
+  var $varToFixedPayoutCal_input = $('<input class="container d-block w-75" id="varToFixedPayoutCalc_liborRate">').attr('type', 'text');
+  var $varToFixedPayoutCalc_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" id="varToFixedPayoutCal_button" style="width: auto">Calculate</button>`);
+
+  var cal_payout_VarToFixed_div = $('<div id="cal_payout_VarToFixed">');
+  cal_payout_VarToFixed_div.append($varToFixedCalLabel, $varToFixedPayoutCal_input, $varToFixedPayoutCalc_button);
+
+  return cal_payout_VarToFixed_div
+}
+
+function cal_payout_FixedToVar() {
+  var $fixedToVarCalLabel = $('<label class="mr-3">').text(`Fixed to Variable Payout`);
+  var $fixedToVarPayoutCal_input = $('<input class="container d-block w-75" id="fixedToVarPayoutCalc_liborRate">').attr('type', 'text');
+  var $fixedToVarPayoutCalc_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" id="fixedToVarPayoutCal_button" style="width: auto">Calculate</button>`);
+
+  var cal_payout_FixedToVar = $('<div id="cal_payout_FixedToVar">');
+  cal_payout_FixedToVar.append($fixedToVarCalLabel, $fixedToVarPayoutCal_input, $fixedToVarPayoutCalc_button);
+
+  return cal_payout_FixedToVar
+}
+
+function displayVariableToFixedPayout(payee, payment) {
+  var $result = $('<h5>').attr('class', 'card-text').text(`The payout amount to the ${payee} is $${payment}.`);
+  return $result
+}
+
+function displayFixedToVariablePayout(payee, payment) {
+  var $result = $('<h5>').attr('class', 'card-text').text(`The payout amount to the ${payee} is $${payment}.`);
+  return $result
 }
 
 $.ajax({
@@ -157,6 +198,8 @@ App = {
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
     $(document).on('click', '#mintIntswap', App.mintIntSwap);
+    $(document).on('click', '#varToFixedPayoutCal_button', App.varToFixedPayoutCalc);
+    $(document).on('click', '#fixedToVarPayoutCal_button', App.fixedToVarPayoutCalc);
 
     App.grabState();
   },
@@ -166,6 +209,8 @@ App = {
 
     App.contracts.IntSwap.deployed().then(function (instance) {
       intSwapInstance = instance;
+
+      $contract_address = intSwapInstance.contract.address;
 
       var partiesPromises = [];
 
@@ -229,9 +274,11 @@ App = {
         $proposed_int_swap.html(card);
       }
 
-      var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
+      if(counterpartyAddress != "0x0000000000000000000000000000000000000000"){
+        var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
 
-      $mint_int_swap.html(mintInswapCard);
+        $mint_int_swap.html(mintInswapCard);
+      }
 
     }).catch(function (err) {
       console.log(err);
@@ -390,14 +437,111 @@ App = {
       var intSwap_tx = res.tx;
       var intSwapMessage = displayIntSwapTX(intSwap_tx);
       $mint_int_swap.append(intSwapMessage);
-      debugger
-
 
     }).catch(function (err) {
       console.log(err.message);
     });
 
 
+  },
+  varToFixedPayoutCalc: function (event) {
+    event.preventDefault();
+    var intSwapInstance;
+    App.contracts.IntSwap.deployed().then(function (instance) {
+      intSwapInstance = instance;
+
+      var $end_libor_rate = $('#varToFixedPayoutCalc_liborRate').val();
+      var $scaled_end_libor_rate = $end_libor_rate * 1000000
+
+      return intSwapInstance.VarToFixedPayoutCalc($scaled_end_libor_rate);
+
+    }).then(function (res) {
+      console.log(res);
+      if(p_swap_out_rate == "variable"){ //if proposer is swapping from variable to fixed
+        variable_to_fixed_payee = "Proposer"
+        return intSwapInstance.payeeAddressToPayAmount.call(proposerAddress);
+      }else{
+        variable_to_fixed_payee = "Counterparty"
+        return intSwapInstance.payeeAddressToPayAmount.call(counterpartyAddress);
+      }
+    }).then(function (res) {
+      //calculate the payout
+      var variable_to_fixed_eth_payout_amount = res/ Math.pow(10, 18);
+      var variable_to_fixed_usd_payout_amount = variable_to_fixed_eth_payout_amount * price_in_usd_for_one_eth;
+      var variable_to_fixed_payout_amount = parseInt(variable_to_fixed_usd_payout_amount);
+
+      var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_payout_amount);
+      $("#cal_payout_VarToFixed").append(payoutResult);
+    }).catch(function (err) {
+      console.log(err.message);
+    });
+  },
+  fixedToVarPayoutCalc: function (event) {
+    event.preventDefault();
+    var intSwapInstance;
+    App.contracts.IntSwap.deployed().then(function (instance) {
+      intSwapInstance = instance;
+
+      var $end_libor_rate = $('#fixedToVarPayoutCalc_liborRate').val();
+      var $scaled_end_libor_rate = $end_libor_rate * 1000000
+
+      return intSwapInstance.FixedToVarPayoutCalc($scaled_end_libor_rate);
+
+    }).then(function (res) {
+      console.log(res);
+      if(p_swap_out_rate == "fixed"){ //if proposer is swapping fixed to variable
+        fixed_to_variable_payee = "Proposer";
+        return intSwapInstance.payeeAddressToPayAmount.call(proposerAddress);
+      }else{
+        fixed_to_variable_payee = "Counterparty";
+        return intSwapInstance.payeeAddressToPayAmount.call(counterpartyAddress);
+        //put counterparty title and payout to html
+      }
+    }).then(function (res) {
+      //calculate the payout
+      var fixed_to_variable_eth_payout_amount = res/ Math.pow(10, 18);
+      var fixed_to_variable_usd_payout_amount = fixed_to_variable_eth_payout_amount * price_in_usd_for_one_eth;
+      var fixed_to_variable_payout_amount = parseInt(fixed_to_variable_usd_payout_amount);
+
+      var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_payout_amount);
+      $("#cal_payout_FixedToVar").append(payoutResult);
+
+
+    }).catch(function (err) {
+      console.log(err.message);
+    });
+  },
+  proposerWithdraw: function (event) {
+    event.preventDefault();
+    var intSwapInstance;
+    App.contracts.IntSwap.deployed().then(function (instance) {
+      intSwapInstance = instance;
+
+      return intSwapInstance.proposalOwnerWithdrawPayment({from:$contractAddress});
+
+    }).then(function (res) {
+
+      console.log(res);
+
+    }).catch(function (err) {
+      console.log(err.message);
+    });
+  },
+  counterpartyWithdraw: function (event) {
+    event.preventDefault();
+    var intSwapInstance;
+    App.contracts.IntSwap.deployed().then(function (instance) {
+      intSwapInstance = instance;
+
+      return intSwapInstance.counterpartyOwnerWithdrawPayment({from:$contractAddress});
+
+    }).then(function (res) {
+
+      console.log(res);
+
+    }).catch(function (err) {
+      console.log(err.message);
+    });
   },
 
 };

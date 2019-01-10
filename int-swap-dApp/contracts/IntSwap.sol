@@ -61,7 +61,7 @@ contract IntSwap is Ownable{
     mapping (address => ProposalEscrow) public proposalAddressToProposalEscrow;
     mapping (address => CounterpartyEscrow) public counterpartyAddressToCounterpartyAddressEscrow;
     mapping (address => uint256) public payeeAddressToPayAmount;
-  
+
 
     modifier onlyProposalOwner() {
         // require(msg.sender == contractAddressToContractTerms[address(this)][var_to_fixed_owner],"Only the contract terms propasal owner can call this function.");
@@ -149,7 +149,7 @@ contract IntSwap is Ownable{
         require(msg.value == _escrowAmount); //msg.value(in wei or ether) has to be the same as the escrow amount
         require(_escrowAmount == calculateEscrowAmount(_escrowPercent)); //require the proposal owner to send the same amount of calculated escrow
         require(proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited == 0);
-        
+
         ProposalEscrow memory proposal_escrow = ProposalEscrow({escrowDepositTimestamp: now, escrow_amount_deposited: _escrowAmount});
         proposalAddressToProposalEscrow[proposalOwner] = proposal_escrow;
 
@@ -176,7 +176,7 @@ contract IntSwap is Ownable{
         if(payee == counterparty){
             return counterpartyAddressToCounterpartyAddressEscrow[payee].escrow_amount_deposited;
         }
-        
+
     }
 
     // _swap_rate = 2.88% based on forward rate of what the US LIBOR 1 month market is expected in 23 months if it is a 24 month contract (1st day of contract maturity month)
@@ -210,20 +210,21 @@ contract IntSwap is Ownable{
     //     return end_LIBOR;
     // }
 
-    function VarToFixedPayoutCalc(uint _end_LIBOR) internal hasMatured onlyOwner returns (uint VarToFixedPayout){
-        // 2.9% = 0.029 LIBOR will be scaled to 29,000,000 
+    //for the purpose of testing, take the hasMatured modifier out
+    function VarToFixedPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns (uint VarToFixedPayout){
+        // 2.9% = 0.029 LIBOR will be scaled to 29,000,000
         // 0.88% = 0.0088 scaled to 8,800,000 LIBOR
         // _end_LIBOR to be passed into function = 29,000,000
         // swap rate will be scaled to 28,800,000 (2.88% = 0.0288)
         //notional amount = 100,000
-        
+
         //if LIBOR increases (is positive) VarToFixed owner gets a profit
         //if LIBOR decreases (is negative) VarToFixed owner gets a loss
         //divide rates by 120,000,000 (with 7 zeroes) to convert from annual to monthly and from integer to 7 decimal places
-       
-        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
+
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];
         IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
-        
+
         uint VarToFixedGain;
         uint VarToFixedLoss;
         // uint end_LIBOR = getEndLibor();
@@ -240,11 +241,11 @@ contract IntSwap is Ownable{
             _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
             varToFixedOwner = proposalOwner;
         } else {
-            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
+            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited;
             varToFixedOwner = counterparty;
         }
 
-        
+
         // when end_LIBOR gone up they experience a gain
         if (end_LIBOR > _swap_rate){
             VarToFixedGain = (_notional_amount.mul(end_LIBOR.sub(_swap_rate))).div(MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER); //166.666
@@ -258,27 +259,27 @@ contract IntSwap is Ownable{
         // if the VarToFixedGain is greater than the _escrow_amount
         // gain cannot exceed the other party's escrow
         if (VarToFixedGain > _escrow_amount){
-            VarToFixedGain = _escrow_amount; 
+            VarToFixedGain = _escrow_amount;
         }
         //if the VarToFixedLoss is greater than the _escrow_amount
         //loss cannot excess your own escrow
         if (VarToFixedLoss > _escrow_amount){
-            VarToFixedLoss = _escrow_amount; 
+            VarToFixedLoss = _escrow_amount;
         }
 
         VarToFixedPayout = _escrow_amount + VarToFixedGain - VarToFixedLoss;
 
         payeeAddressToPayAmount[varToFixedOwner] = VarToFixedPayout;
-        
-        return VarToFixedPayout;
-    } 
 
-    function FixedToVarPayoutCalc(uint _end_LIBOR) internal hasMatured onlyOwner returns(uint FixedToVarPayout){
+        return VarToFixedPayout;
+    }
+
+    function FixedToVarPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns(uint FixedToVarPayout){
         //if LIBOR increases (is positive) FixedToVar owner gets a loss
         //if LIBOR decreases (is negative) FixedToVar owner gets a profit
-        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];        
+        ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];
         IntSwapTerms memory int_swap_terms = contractAddressToContractTerms[address(this)]; //address(this) is the address of this contract
-        
+
         uint FixedToVarGain;
         uint FixedToVarLoss;
         // uint end_LIBOR = getEndLibor();
@@ -290,13 +291,13 @@ contract IntSwap is Ownable{
         uint MONTHLY_INTEREST_RATE_SCALING_FACTOR_MULTIPLIER = months.mul(INTEREST_RATE_SCALING_FACTOR_MULTIPLIER);
 
         address fixedToVarOwner;
-        
+
 
         if (keccak256(proposal_owner.owner_input_rate_type) == keccak256(fixedRate)) {
             _escrow_amount = proposalAddressToProposalEscrow[proposalOwner].escrow_amount_deposited;
             fixedToVarOwner = proposalOwner;
         } else {
-            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited; 
+            _escrow_amount = counterpartyAddressToCounterpartyAddressEscrow[counterparty].escrow_amount_deposited;
             fixedToVarOwner = counterparty;
         }
 
@@ -316,7 +317,7 @@ contract IntSwap is Ownable{
 
         payeeAddressToPayAmount[fixedToVarOwner] = FixedToVarPayout;
 
-        return FixedToVarPayout;        
+        return FixedToVarPayout;
     }
 
     function proposalOwnerWithdrawPayment() public hasMatured onlyProposalOwner {

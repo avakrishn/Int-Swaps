@@ -55,11 +55,11 @@
       <div class="container w-50">
         <div class="row">
           <div id="step_one_input" class="center">
-          <label for "notional_amount">Notional amount of loan principal that IntSwap<sup>TM</sup> would apply to:</label>
+          <label for="notional_amount">Notional amount of loan principal that IntSwap<sup>TM</sup> would apply to:</label>
 
           <input id="notional_amount" type="number" name="notional_amount" placeholder="Amount in thousands that you want to swap interest on...">
 
-          <label for maturity_month style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
+          <label for=maturity_month style="color:#096EB6;">Select month and year for the month that you would like to swap:</label>
             <div class="d-flex flex-row justify-content-center">
               <select id="maturity_month" type="number">
                 <option value="01">January</option>
@@ -92,9 +92,9 @@
                 <option value="2032">2032</option>
               </select>
             </div>
-          <label for "current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
+          <label for="current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
           <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate" placeholder="%">
-          <label for "swap_out_of_rate_type">What rate type do you want to swap out of?</label>
+          <label for="swap_out_of_rate_type">What rate type do you want to swap out of?</label>
 
           <select id="swap_out_of_rate_type" type="number">
             <option>Select</option>
@@ -185,7 +185,6 @@
               <label><input type="radio" name="riskAgree" value="disagree" id="disagree"> I do not understand/agree.</label><br><br>
               </div>
             </form>
-<<<<<<< HEAD
 
             <label>Enter Your Address</label>
             <input class="w-100 mb-3" id="proposal_owner_address" type="text">
@@ -193,12 +192,7 @@
                 <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
                 <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
             </div>
-            
-=======
-            <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
 
-            <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
->>>>>>> mint-intswap
             <br>
             <p id="RiskAgreeMessage"> </p>
           </div>
