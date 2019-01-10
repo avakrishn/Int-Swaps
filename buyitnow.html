@@ -1,0 +1,93 @@
+<!--This is file  for buyitnow.html that receives querystring from browseoffers and registers counterparty and pays escrow.-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Buy It Now</title>
+
+  <!-- Use Bootstrap 4 -- no take it out because it is causing format problems compared to the look of the other pages.  
+ 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous"> -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+
+ </head>
+  <body>
+<div class="container">
+    <div class="text-center">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2 col-lg-8">
+            <h2>Buy It Now</h2>
+            <br/>
+        </div>
+      </div>
+    <!-- The following section moved from index.html--still needs to be worked on. -->   
+      <div class="row">
+        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+
+              <h3 class="panel-title text-center">IntSwaps<sup>TM</sup> Contract Terms</h3>
+            </div>
+            <div class="panel-body">
+              <strong>Contract Number:</strong><span id="insert_contract_number"></span><br/><br/>
+              <strong>Maturity Month and Year:</strong><span id="insert_maturity_month_year"></span><br/><br/>
+               <strong>Swap Type:</strong><span id="insert_swap_type"></span><br/><br/>
+               <strong>Notional Amount:</strong><span id="insert_notional_amount"></span><br/><br/>
+				<strong>Swap Rate:</strong><span id="insert_swap_rate"></span><br/><br/>
+              <strong>Escrow Amount to Pay:</strong> <span id="insert_escrow_amount"></span><br/><br/>
+              <strong>Pay from address:</strong><br/>
+              <input type="text" class="form-control" id="insert_withdraw_address" placeholder="Address you will send the payment from" />
+              <button class="btn btn-primary center" id="transferButton" type="button">Buy It Now</button>
+
+            	</div>
+          	</div>
+        	</div>
+      	</div>
+      	<div class="row">
+      		 <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+
+              <h3 class="panel-title text-center">Create IntSwaps<sup>TM</sup> Contract <br /> (Administrative Use Only)</h3>
+            </div>
+            <div class="panel-body">
+              <strong>Contract Number:</strong><span id="insert_contract_num"></span><br/><br />
+                         
+              <button class="btn btn-primary center" id="mintIntSwapButton" type="button">Create</button>
+
+            	</div>
+          	</div>
+        	</div>
+      	</div>
+
+
+      	</div>
+    	</div>
+	</div>
+    <div>
+      <footer>
+
+        <p>&copy IntSwaps<sup>TM</sup> LLC 2019.  All rights reserved.
+
+        </p>
+      </footer>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/buyitnow.js"></script>
+  </body>
+</html>

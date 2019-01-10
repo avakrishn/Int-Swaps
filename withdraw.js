@@ -1,5 +1,5 @@
 // Js file for withdraw.html
-App = {
+ App = {
   web3Provider: null,
   contracts: {},
 
@@ -97,10 +97,76 @@ App = {
     });
   }
 
-};
+}; 
+
+//JavaScript function below parses and returns the parameters from the url querystring.
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+// then pick up the value from the variable array.
+
+// set a default value to the variable if url parameter is empty:
+function getUrlParam(parameter, defaultvalue){
+    var urlparameter = defaultvalue;
+    if(window.location.href.indexOf(parameter) > -1){
+        urlparameter = getUrlVars()[parameter];
+        }
+    return urlparameter;
+}
+
+
+
+function displayWithdrawTerms() {
+  var $contractnum = getUrlVars()["contractnum"];
+  console.log ($contractnum, "contract number");
+  var $payout_string = getUrlVars()["payout"];
+  var $payout = parseFloat($payout_string);
+  console.log($payout, "payout");
+  var $matmonth = getUrlVars()["matmonth"];
+  var $matyear = getUrlVars()["matyear"];
+  var $swaprate_string = getUrlVars()["swaprate"];
+  var $swaprate = parseFloat($swaprate_string);
+  console.log($swaprate, "swap rate");
+  var $LIBOR_string = getUrlVars()["LIBOR"];
+  var $LIBOR = parseFloat($LIBOR_string);
+  var $swaptype = getUrlVars()["swaptype"];
+  console.log($swaptype, "swap type");
+  var $notional_string = getUrlVars()["notional"];
+  var $notional = parseFloat($notional_string);
+  var $escrow_string = getUrlVars()["escrow"];
+  var $escrow = parseFloat($escrow_string);
+  console.log($escrow, "escrow");
+
+  document.getElementById("insert_contract_number").innerHTML = "&nbsp;" + $contractnum;
+  document.getElementById("insert_maturity_month_year").innerHTML = "&nbsp;" + $matmonth + "/" + $matyear;
+  
+ 
+  if ($swaptype == "1" ) {
+     document.getElementById("insert_swap_type").innerHTML = "&nbsp;" + "From Fixed to Variable";
+  }
+  else if ($swaptype == "2" ) {
+    document.getElementById("insert_swap_type").innerHTML = "&nbsp;" + "From Variable to Fixed";
+  }
+  else {
+    console.log("swaptype undefined");
+  }
+  document.getElementById("insert_notional_amount").innerHTML = "&nbsp;" + "$" + $notional;
+  document.getElementById("insert_swap_rate").innerHTML = "&nbsp;" + $swaprate + "%";
+  document.getElementById("insert_LIBOR").innerHTML = "&nbsp;" + $LIBOR + "%";
+  document.getElementById("insert_escrow_amt").innerHTML = "&nbsp;" + $escrow.toFixed(2);
+  document.getElementById("insert_payout_amount").innerHTML = "&nbsp;" + $payout.toFixed(2);
+}
 
 $(function() {
   $(window).load(function() {
     App.init();
+    getUrlVars();
+   displayWithdrawTerms();
+
   });
 });
+

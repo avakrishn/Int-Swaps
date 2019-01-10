@@ -28,6 +28,7 @@
       <nav>
           <a class="btn btn-primary" href="index.html">Home</a>
           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
+          <a class="btn btn-primary" href="browseoffers.html">Browse Offers</a>
           <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
           <a class="btn btn-primary" role="button" href="#">Withdraw</a>
           <a class="btn btn-primary" href="faq.html">FAQ</a>
@@ -52,11 +53,15 @@
             </div>
             <div class="panel-body">
               <strong>Contract Number:</strong><span id="insert_contract_number"></span><br/><br/>
-              <strong>Payout Available:</strong> <span id="insert_payout_amount"></span><br/><br/>
+               <strong>Maturity Month and Year:</strong><span id="insert_maturity_month_year"></span><br/><br/>
+               <strong>Swap Type:</strong><span id="insert_swap_type"></span><br/><br/>
+               <strong>Notional Amount:</strong><span id="insert_notional_amount"></span><br/><br/>
+              <strong>Swap Rate:</strong><span id="insert_swap_rate"></span><br/><br/>
+               <strong>LIBOR at beginning of maturity month:</strong><span id="insert_LIBOR"></span><br/><br/>
+               <strong>Escrow amount:</strong><span id="insert_escrow_amt"></span><br/><br/>
+              <strong>Payout Available to Withdraw:</strong> <span id="insert_payout_amount"></span><br/><br/>
               <strong>Transfer to address:</strong><br/>
-              <input type="text" class="form-control" id="insert_withdraw_address" placeholder="Address you want to send the transfer to" />
-              <strong>Amount to Withdraw:</strong><br/>
-              <input type="text" class="form-control" id="insert_withdraw_amount" placeholder="Amount you want to withdraw" /><br/>
+              <input type="text" class="form-control" id="insert_withdraw_address" placeholder="Address where you want to deposit the payout" />
               <button class="btn btn-primary center" id="transferButton" type="button">Withdraw</button>
 
             </div>

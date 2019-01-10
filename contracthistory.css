@@ -5,6 +5,26 @@ th {
 	color: #096EB6;
 	font-weight: bold;
 	align-self: center;
+	text-align: center;
+}
+
+
+td.payout {
+	color:#096EB6;
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: center; 
 
 }
 
+td {
+	text-align: center; 
+}
+
+h2 {
+	text-align: center; 
+}
+
+tr {
+	line-height: 25px;
+}
