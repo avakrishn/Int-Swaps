@@ -34,12 +34,13 @@
           <a class="btn btn-primary" role="button" href="#">Get a Quote</a>
           <a class="btn btn-primary" href="browseoffers.html">Browse Offers</a>
           <a class="btn btn-primary" href="contracthistory.html">Contract History</a>
+          <a class="btn btn-primary" href="mint_intswap.html">Mint IntSwap</a>
           <a class="btn btn-primary" href="withdraw.html">Withdraw</a>
           <a class="btn btn-primary" href="faq.html">FAQ</a>
-          <a class="btn btn-primary" href="about.html">About Us</a>     
+          <a class="btn btn-primary" href="about.html">About Us</a>
       </nav>
     </div>
-    
+
     <div class="container" >
 <!--had to put whole page inside a div so that reset button at bottom would work on top section step_one_input-->
       <form id="whole_page" class="d-flex flex-column justify-content-center">
@@ -48,7 +49,7 @@
             <div class="center" width="700px">
               <h2 class="text-center">Get a Quote</h2>
               <br/>
-            </div>   
+            </div>
          </div>
       </div>
       <div class="container w-50">
@@ -73,14 +74,14 @@
                 <option value="10">October</option>
                 <option value="11">November</option>
                 <option value="12">December</option>
-              </select>              
+              </select>
               <select id="maturity_year" type="number">
                 <option value="2019">2019</option>
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
                 <option value="2022">2022</option>
                 <option value="2023">2023</option>
-                <option value="2024">2024</option>  
+                <option value="2024">2024</option>
                 <option value="2025">2025</option>
                 <option value="2026">2026</option>
                 <option value="2027">2027</option>
@@ -88,14 +89,14 @@
                 <option value="2029">2029</option>
                 <option value="2030">2030</option>
                 <option value="2031">2031</option>
-                <option value="2032">2032</option>    
+                <option value="2032">2032</option>
               </select>
             </div>
           <label for "current_annual_rate">What annual % rate of interest do you currently pay (e.g. 4.75)?</label>
           <input id="current_annual_rate" type="number" step=".001" name="current_annual_rate" placeholder="%">
           <label for "swap_out_of_rate_type">What rate type do you want to swap out of?</label>
 
-          <select id="swap_out_of_rate_type" type="number">         
+          <select id="swap_out_of_rate_type" type="number">
             <option>Select</option>
             <option value="1">From Fixed into Variable</option>
             <option value="2">From Variable into Fixed</option>
@@ -104,13 +105,13 @@
           <br/>
           <button type="button" class="btn btn-primary center" id="getQuote" style="width: auto">Get a Quote</button>
 
-          </div> 
+          </div>
         </div>
       </div>
       <div class="container w-50">
           <div class="row">
             <div id="step_two_display_quote" style="display: none">
-              <table class="d-flex flex-column center"> 
+              <table class="d-flex flex-column center">
                 <thead>
                   <caption class="text-center">Your Quote Details</caption>
                   <th class="quote">Description</th><th class="quote">Amount/Value</th>
@@ -128,22 +129,22 @@
             </div>
           </div>
             <br>
-          <div class="row">  
+          <div class="row">
             <div id="step_three_profit_loss_table" style="display: none">
-            <table class="d-flex flex-column"> 
+            <table class="d-flex flex-column">
               <thead>
                 <h6>Your profit or (loss) would be these amounts (excluding service charges) if LIBOR at the beginning of the maturity month differs from the Swap Contract Rate: </h6>
 
                 <th class="profit">Difference<br>LIBOR vs Swap Rate</th><th class="profit">Net profit<br>or (loss)</th><th class="profit" style="text-align: left">Link to Details</th>
               </thead>
               <tbody>
-       <!-- take out next line after test querystring method of passing variables:         
-                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td> <a class="btn btn-sm" id="minus_three" 
+       <!-- take out next line after test querystring method of passing variables:
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td> <a class="btn btn-sm" id="minus_three"
                   href="/detailtemplate.html?notional=100000.50&swaprate=2.88&currentrate=4.00&swaptype=1&escrow=200.00&ratechange=-3.00" target="_blank">See details</a></td></tr> -->
 
-     
+
    <!--style="width: auto" not working on anchor btn-->
-                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_three"href="#">See details</a></td></tr> 
+                <tr><td>-3.0%</td><td id="insert_minus_three_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_three"href="#">See details</a></td></tr>
                 <tr><td>-2.0%</td><td id="insert_minus_two_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_two" href="#">See details</a></td></tr>
                 <tr><td>-1.0%</td><td id="insert_minus_one_result" class="profit"></td><td><a class="btn btn-sm details" id="minus_one" href="#">See details</a></td></tr>
                 <tr><td>&nbsp;&nbsp;0.0%</td><td id="insert_zero_change_result" class="profit"></td><td><a  class="btn btn-sm details" id="zero_change" href="#" >See details</a></td></tr>
@@ -153,8 +154,8 @@
 
               </tbody>
             </table>
-          
-          </div> 
+
+          </div>
               <!-- end of step-three-profit-loss-table div-->
 
 
@@ -184,6 +185,7 @@
               <label><input type="radio" name="riskAgree" value="disagree" id="disagree"> I do not understand/agree.</label><br><br>
               </div>
             </form>
+<<<<<<< HEAD
 
             <label>Enter Your Address</label>
             <input class="w-100 mb-3" id="proposal_owner_address" type="text">
@@ -192,14 +194,19 @@
                 <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
             </div>
             
+=======
+            <button type="button" class="btn btn-primary center btn-sm" id="placeTrade" style="width: auto">Yes buy it!</button><br>
+
+            <input type="reset" id="cancelTrade" class="btn btn-primary center btn-sm" value="Cancel and reset">
+>>>>>>> mint-intswap
             <br>
             <p id="RiskAgreeMessage"> </p>
-          </div> 
+          </div>
       </div>
 
       <div container>
         <div id="step_six_confirm_trade" style="display: none; text-align:center">
-           <table class="d-flex flex-column"> 
+           <table class="d-flex flex-column">
               <thead>
                <caption class="text-center">Your IntSwaps<sup>TM</sup> Trade Confirmation</caption>
                   <th class="quote">Description</th><th class="quote">Amount/Value</th>
@@ -218,7 +225,7 @@
                 <tr><td>Escrow Amount Required in US Dollars</td><td id="insert_escrow_dollar_confirm"></td></tr>
                 <tr><td>Exchange rate US Dollars per Ether</td><td id=insert_ether_exchange_rate"></td></tr>
                 <tr><td>Escrow Amount Required in Ether</td><td id="insert_escrow_ether_confirm"></td></tr>
-                <tr><td colspan="2">Congratulations!  You have purchased an IntSwaps<sup>TM</sup> Contract! </td></tr> 
+                <tr><td colspan="2">Congratulations!  You have purchased an IntSwaps<sup>TM</sup> Contract! </td></tr>
                 <tr><td colspan="2">Please remit your escrow payment in Ether within 48 hours</td></tr>
                 <tr><td colspan="2">to the following contract address (QR code provided)</td></tr>
                 <tr><td colspan="2" id="insert_contract_address_confirm" class="text-center">0xeba6f62f4f7bef9692ecf36cfe3eadf29fd2bed9b</td></tr>
@@ -228,15 +235,15 @@
             </table>
 
         </div>
-      </div>       
-      
+      </div>
+
       </form>
     <!--//end of whole page form so that reset input works-->
     </div>
-   
 
- 
- 
+
+
+
   <div>
     <footer>
       <br>
@@ -246,7 +253,7 @@
     </footer>
   </div>
 
-  
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

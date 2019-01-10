@@ -24,7 +24,7 @@ var swap_contract_rate_scaled = 28800000;
 
 
 function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow ){
-  
+
   if(notional_amount > 0 && escrow > 0){
     var alternative_rate;
 
@@ -33,9 +33,9 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     }else{
       alternative_rate = "fixed"
     }
-  
+
     var $cardContainer = $('<div>').attr('class', 'card justify-content-center text-center p-1 mt-5');
-  
+
     var $cardBody = $('<div>').attr('class', 'card-body');
     var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').text(`Proposed Int Swap Contract`);
     var $notional_amount = $('<h5>').attr('class', 'card-text').text(`Notional Amount: ${notional_amount}`);
@@ -46,12 +46,12 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     var $counterparty_input_label = $('<label class="mr-3">').text(`Enter Your Address to Become the Counterparty:`);
     var $counterparty_input = $('<input class="container d-block w-75" id="counterparty_owner_address">').attr('type', 'text');
     var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-escrow=${escrow} data-percent=${escrow_percent} id="registerCounterparty" style="width: auto">Enter into Int Swap as Counterparty</button>`);
-    
+
     $cardBody.append($cardTitle, $notional_amount, $proposer, $counterparty, $swap_rate, $maturity_date, $counterparty_input_label, $counterparty_input, $enter_button);
     $cardContainer.append($cardBody);
     return $cardContainer;
   }
-  
+
 }
 
 $.ajax({
@@ -104,7 +104,7 @@ App = {
 
     });
 
-    
+
   },
 
   bindEvents: function () {
@@ -112,29 +112,31 @@ App = {
     $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
-    
+
     App.grabState();
   },
 
   grabState: function () {
     var intSwapInstance;
-  
+
     App.contracts.IntSwap.deployed().then(function (instance) {
       intSwapInstance = instance;
-      
-    
-      return intSwapInstance.proposalOwner.call();
-      
+
+      var partiesPromises = [];
+
+      partiesPromises.push(intSwapInstance.proposalOwner.call(), intSwapInstance.counterparty.call());
+
+      return Promise.all(partiesPromises);
+
 
     }).then(function (result){
-    
 
-        console.log(result);
+        let proposerAddress = result[0];
+        let counterpartyAddress = result[1];
 
         var promises = [];
 
-        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(result), intSwapInstance.proposalAddressToProposalEscrow.call(result));
-
+        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(proposerAddress), intSwapInstance.proposalAddressToProposalEscrow.call(proposerAddress), intSwapInstance.counterpartyAddressToCounterpartyAddressEscrow.call(counterpartyAddress));
 
         return Promise.all(promises);
 
@@ -142,27 +144,31 @@ App = {
       var proposal_owner_struct = result[0];
       var proposal_owner_escrow = result[1];
       var p_escrow = proposal_owner_escrow[1];
+      debugger
 
       // convert notional amount in wei to notional amount in USD
       var p_wei_notional_amount = proposal_owner_struct[0];
       var p_eth_notional_amount = p_wei_notional_amount/ Math.pow(10, 18);
       var p_notional_amount = p_eth_notional_amount * price_in_usd_for_one_eth;
       p_notional_amount = parseInt(p_notional_amount);
+      debugger
 
       // proposal owner input rate
       var p_owner_input_rate = proposal_owner_struct[1];
       p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
       p_owner_input_rate = p_owner_input_rate * 100;
-
+      debugger
       // maturity end date
       var date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
       date = date.toString().split(" ");
       date = `${date[1]} ${date[3]}`
-
+      debugger
       // proposal owner will swap out of p_swap_out_rate
       var p_swap_out_rate = proposal_owner_struct[3];
-      
+
       var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
+
+      debugger
 
       $proposed_int_swap.html(card);
 
@@ -206,7 +212,7 @@ App = {
       var maturity_date = `${$maturity_year.val()}.${$maturity_month.val()}.01`
       var unix_maturity_date = new Date(maturity_date).getTime() / 1000
 
-      // determine if rate type of proposer is fixed or variable 
+      // determine if rate type of proposer is fixed or variable
       var rate_type;
       if ($swap_out_of_rate_type.val() == 1) {
         rate_type = "fixed";
@@ -278,7 +284,7 @@ App = {
 
     }).then(function (res) {
       console.log(res);
-  
+
       var wei_escrow_amount = $("#registerCounterparty").attr('data-escrow');
       var escrow_percent = $("#registerCounterparty").attr('data-percent');
 
