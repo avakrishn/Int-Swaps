@@ -1,5 +1,5 @@
 // Js file for intswap.html but name changed to getquote.html
-$contract_address;
+var $contract_address;
 var $notional_amount = $('#notional_amount');
 var $maturity_month = $('#maturity_month');
 var $maturity_year = $('#maturity_year');
@@ -18,6 +18,8 @@ let proposerAddress;
 let counterpartyAddress;
 var variable_to_fixed_payee;
 var fixed_to_variable_payee;
+
+var registerProposalOwnerRunning = false;
 
 var $proposed_int_swap = $('#proposed_int_swap');
 var $mint_int_swap = $('#mint_int_swap');
@@ -103,7 +105,7 @@ function displayIntSwapTX(transactionHash) {
   var getPayout_FixedToVar = cal_payout_FixedToVar()
 
   mintIntSwapResult.append($tx, getPayout_VarToFixed, getPayout_FixedToVar);
-  return mintIntSwapResult
+  return mintIntSwapResult;
 }
 
 
@@ -310,6 +312,12 @@ App = {
   },
 
   registerProposalOwner: function (event) {
+    if(registerProposalOwnerRunning ==  true){
+      return false;
+    }else{
+      registerProposalOwnerRunning = true;
+    }
+
     event.preventDefault();
     var intSwapInstance;
     App.contracts.IntSwap.deployed().then(function (instance) {
@@ -334,11 +342,13 @@ App = {
 
       // convert notional amount into eth and then into wei for metamask
       eth_notional_amount = notional_amount / price_in_usd_for_one_eth;
-      wei_notional_amount = Math.pow(10, 18) * eth_notional_amount;
-
+      // wei_notional_amount = Math.pow(10, 18) * eth_notional_amount;
+      wei_notional_amount = window.web3.toWei(eth_notional_amount, "ether");
+      
       // convert escrow amount into eth and then into wei for metamask
       eth_escrow_amount = escrow_amount / price_in_usd_for_one_eth;
-      wei_escrow_amount = Math.pow(10, 18) * eth_escrow_amount;
+      // wei_escrow_amount = Math.pow(10, 18) * eth_escrow_amount;
+      wei_escrow_amount = window.web3.toWei(eth_escrow_amount, "ether");
 
       proposer_rate = $current_annual_rate.val() /100;
       proposer_rate = proposer_rate * Math.pow(10, 9);
@@ -347,7 +357,7 @@ App = {
       return intSwapInstance.registerProposalOwner(wei_notional_amount, proposer_rate, unix_maturity_date, rate_type, $proposal_owner_address.val());
 
     }).then(function (result) {
-
+      registerProposalOwnerRunning = false;
       // get the Proposal owner struct from the proposalAddressToProposalOwner mapping with the key of proposal owner address
       return intSwapInstance.proposalAddressToProposalOwner.call($proposal_owner_address.val());
 
@@ -359,7 +369,10 @@ App = {
 
 
       // have proposal owner deposit escrow into Int Swap contract using msg.data and msg.value
-      return intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
+      return setTimeout(function(){
+        intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
+      }, 1000);
+      
 
       // pattern for deposit eth into account
       // myContractInstance.depositFunds({from: web3.eth.accounts[0], gas: 3000000, value: 100}, function(err, res){});
