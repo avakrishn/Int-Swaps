@@ -18,6 +18,9 @@ let proposerAddress;
 let counterpartyAddress;
 var variable_to_fixed_payee;
 var fixed_to_variable_payee;
+var total_escrow_deposited_in_contract;
+var intSwap_tx;
+var p_swap_out_rate;
 
 var registerProposalOwnerRunning = false;
 
@@ -101,17 +104,27 @@ function displayIntSwapTX(transactionHash) {
   var mintIntSwapResult =  $('<div>');
   var $tx = $('<h5>').attr('class', 'card-text').text(`IntSwap Minted Successfully: ${transactionHash}`);
 
+  // var getPayout_VarToFixed = cal_payout_VarToFixed();
+  // var getPayout_FixedToVar = cal_payout_FixedToVar()
+
+  mintIntSwapResult.append($tx);
+  return mintIntSwapResult;
+}
+
+function payout() {
+  var calPaypout =  $('<div>');
+
   var getPayout_VarToFixed = cal_payout_VarToFixed();
   var getPayout_FixedToVar = cal_payout_FixedToVar()
 
-  mintIntSwapResult.append($tx, getPayout_VarToFixed, getPayout_FixedToVar);
-  return mintIntSwapResult;
+  calPaypout.append(getPayout_VarToFixed, getPayout_FixedToVar);
+  return calPaypout;
 }
 
 
 function cal_payout_VarToFixed() {
   var $varToFixedCalLabel = $('<label class="mr-3">').text(`Variable to Fixed Payout`);
-  var $varToFixedPayoutCal_input = $('<input class="container d-block w-75" id="varToFixedPayoutCalc_liborRate">').attr('type', 'text');
+  var $varToFixedPayoutCal_input = $('<input placeholder="Enter Libor Rate" class="container d-block w-75" id="varToFixedPayoutCalc_liborRate">').attr('type', 'text');
   var $varToFixedPayoutCalc_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" id="varToFixedPayoutCal_button" style="width: auto">Calculate</button>`);
 
   var cal_payout_VarToFixed_div = $('<div id="cal_payout_VarToFixed">');
@@ -122,7 +135,7 @@ function cal_payout_VarToFixed() {
 
 function cal_payout_FixedToVar() {
   var $fixedToVarCalLabel = $('<label class="mr-3">').text(`Fixed to Variable Payout`);
-  var $fixedToVarPayoutCal_input = $('<input class="container d-block w-75" id="fixedToVarPayoutCalc_liborRate">').attr('type', 'text');
+  var $fixedToVarPayoutCal_input = $('<input placeholder="Enter Libor Rate" class="container d-block w-75" id="fixedToVarPayoutCalc_liborRate">').attr('type', 'text');
   var $fixedToVarPayoutCalc_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" id="fixedToVarPayoutCal_button" style="width: auto">Calculate</button>`);
 
   var cal_payout_FixedToVar = $('<div id="cal_payout_FixedToVar">');
@@ -266,7 +279,7 @@ App = {
       date = `${date[1]} ${date[3]}`
 
       // proposal owner will swap out of p_swap_out_rate
-      var p_swap_out_rate = proposal_owner_struct[3];
+      p_swap_out_rate = proposal_owner_struct[3];
 
 
 
@@ -276,11 +289,20 @@ App = {
         $proposed_int_swap.html(card);
       }
 
-      if(counterpartyAddress != "0x0000000000000000000000000000000000000000"){
+      //show mint swap if counterparty deposited and but the intswap proposal has not created
+      if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && !total_escrow_deposited_in_contract){
         var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
-
         $mint_int_swap.html(mintInswapCard);
       }
+
+      // if (total_escrow_deposited_in_contract) {
+      //   var calculatePayout = payout();
+      //   $("#cal_payout").html(calculatePayout);
+      // }
+      var calculatePayout = payout();
+      $("#cal_payout").html(calculatePayout);
+
+
 
     }).catch(function (err) {
       console.log(err);
@@ -344,7 +366,7 @@ App = {
       eth_notional_amount = notional_amount / price_in_usd_for_one_eth;
       // wei_notional_amount = Math.pow(10, 18) * eth_notional_amount;
       wei_notional_amount = window.web3.toWei(eth_notional_amount, "ether");
-      
+
       // convert escrow amount into eth and then into wei for metamask
       eth_escrow_amount = escrow_amount / price_in_usd_for_one_eth;
       // wei_escrow_amount = Math.pow(10, 18) * eth_escrow_amount;
@@ -369,10 +391,12 @@ App = {
 
 
       // have proposal owner deposit escrow into Int Swap contract using msg.data and msg.value
-      return setTimeout(function(){
-        intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
-      }, 1000);
-      
+      // return setTimeout(function(){
+      //   intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
+      // }, 1000);
+
+      return intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
+
 
       // pattern for deposit eth into account
       // myContractInstance.depositFunds({from: web3.eth.accounts[0], gas: 3000000, value: 100}, function(err, res){});
@@ -447,10 +471,15 @@ App = {
 
     }).then(function (res) {
       console.log(res);
-      var intSwap_tx = res.tx;
+      intSwap_tx = res.tx;
+
+      return intSwapInstance.contractAddressToContractTerms.call($contract_address);
+
+    }).then(function (res) {
+      total_escrow_deposited_in_contract = res[0]/Math.pow(10, 18) * price_in_usd_for_one_eth;
+
       var intSwapMessage = displayIntSwapTX(intSwap_tx);
       $mint_int_swap.append(intSwapMessage);
-
     }).catch(function (err) {
       console.log(err.message);
     });
@@ -484,7 +513,10 @@ App = {
       var variable_to_fixed_payout_amount = parseInt(variable_to_fixed_usd_payout_amount);
 
       var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_payout_amount);
-      $("#cal_payout_VarToFixed").append(payoutResult);
+      debugger
+      $("#cal_payout").append(payoutResult);
+
+
     }).catch(function (err) {
       console.log(err.message);
     });
@@ -517,7 +549,7 @@ App = {
       var fixed_to_variable_payout_amount = parseInt(fixed_to_variable_usd_payout_amount);
 
       var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_payout_amount);
-      $("#cal_payout_FixedToVar").append(payoutResult);
+      $("#cal_payout").append(payoutResult);
 
 
     }).catch(function (err) {
@@ -530,7 +562,7 @@ App = {
     App.contracts.IntSwap.deployed().then(function (instance) {
       intSwapInstance = instance;
 
-      return intSwapInstance.proposalOwnerWithdrawPayment({from:$contractAddress});
+      return intSwapInstance.proposalOwnerWithdrawPayment();
 
     }).then(function (res) {
 
@@ -546,7 +578,7 @@ App = {
     App.contracts.IntSwap.deployed().then(function (instance) {
       intSwapInstance = instance;
 
-      return intSwapInstance.counterpartyOwnerWithdrawPayment({from:$contractAddress});
+      return intSwapInstance.counterpartyOwnerWithdrawPayment();
 
     }).then(function (res) {
 
