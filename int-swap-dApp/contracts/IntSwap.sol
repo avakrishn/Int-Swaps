@@ -211,7 +211,7 @@ contract IntSwap is Ownable{
     // }
 
     //for the purpose of testing, take the hasMatured modifier out
-    function VarToFixedPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns (uint VarToFixedPayout){
+    function VarToFixedPayoutCalc(uint _end_LIBOR) public onlyOwner returns (uint VarToFixedPayout){
         // 2.9% = 0.029 LIBOR will be scaled to 29,000,000
         // 0.88% = 0.0088 scaled to 8,800,000 LIBOR
         // _end_LIBOR to be passed into function = 29,000,000
@@ -274,7 +274,7 @@ contract IntSwap is Ownable{
         return VarToFixedPayout;
     }
 
-    function FixedToVarPayoutCalc(uint _end_LIBOR) public hasMatured onlyOwner returns(uint FixedToVarPayout){
+    function FixedToVarPayoutCalc(uint _end_LIBOR) public onlyOwner returns(uint FixedToVarPayout){
         //if LIBOR increases (is positive) FixedToVar owner gets a loss
         //if LIBOR decreases (is negative) FixedToVar owner gets a profit
         ProposalOwner memory proposal_owner = proposalAddressToProposalOwner[proposalOwner];
@@ -320,7 +320,8 @@ contract IntSwap is Ownable{
         return FixedToVarPayout;
     }
 
-    function proposalOwnerWithdrawPayment() public hasMatured onlyProposalOwner {
+// hasMatured modififer is taken out for the purpose of demo
+    function proposalOwnerWithdrawPayment() public onlyProposalOwner {
         address payee = msg.sender;
         uint256 payment = payeeAddressToPayAmount[payee];
 
@@ -335,7 +336,8 @@ contract IntSwap is Ownable{
         emit Withdrawn(payee, payment, block.timestamp);
     }
 
-    function counterpartyOwnerWithdrawPayment() public hasMatured onlyCounterparty {
+// hasMatured modififer is taken out for the purpose of demo
+    function counterpartyOwnerWithdrawPayment() public onlyCounterparty {
         address payee = msg.sender;
         uint256 payment = payeeAddressToPayAmount[payee];
 
