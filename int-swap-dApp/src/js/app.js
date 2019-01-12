@@ -249,8 +249,9 @@ App = {
 
     App.contracts.IntSwap.deployed().then(function (instance) {
       intSwapInstance = instance;
-      debugger
+      //this is selected account in metamask the user is currently signed in
       $current_account = web3.eth.accounts[0];
+
       $contract_address = intSwapInstance.contract.address;
 
       var partiesPromises = [];
@@ -314,7 +315,7 @@ App = {
       }
 
       //show mint swap if counterparty deposited and but the intswap proposal has not created
-      if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract){
+      if(counterpartyAddress != "0x0000000000000000000000000000000000000000"){
         var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
         $mint_int_swap.html(mintInswapCard);
       }
@@ -553,7 +554,7 @@ App = {
       var variable_to_fixed_payout_amount = parseInt(variable_to_fixed_usd_payout_amount);
 
       var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_payout_amount);
-      debugger
+
       $("#cal_payout").append(payoutResult);
 
 
