@@ -1,4 +1,4 @@
-// Js file for intswap.html but name changed to getquote.html
+// js file connecting to Solidity Smart Contract, IntSwap.sol, via web3.js
 var $contract_address;
 var $current_account;
 var $notional_amount = $('#notional_amount');
