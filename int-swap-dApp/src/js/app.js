@@ -42,7 +42,7 @@ var swap_contract_rate_percent = 2.88;
 var swap_contract_rate_scaled = 28800000;
 
 
-function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow ){
+function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow, escrow_USD ){
 
   if(notional_amount > 0 && escrow > 0){
     var alternative_rate;
@@ -62,11 +62,12 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     var $counterparty = $('<h5>').attr('class', 'card-text').text(`As the counterparty you will swap out of ${alternative_rate} into ${proposer_rate_type} rate`);
     var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
     var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
+    var $counterparty_escrow = $('<h5>').attr('class', 'card-text').text(`The escrow you will be depositing is: $${escrow_USD}`);
     var $counterparty_input_label = $('<label class="mr-3">').text(`Enter Your Address to Become the Counterparty:`);
     var $counterparty_input = $('<input class="container d-block w-75" id="counterparty_owner_address">').attr('type', 'text');
     var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-escrow=${escrow} data-percent=${escrow_percent} id="registerCounterparty" style="width: auto">Enter into Int Swap as Counterparty</button>`);
 
-    $cardBody.append($cardTitle, $notional_amount, $proposer, $counterparty, $swap_rate, $maturity_date, $counterparty_input_label, $counterparty_input, $enter_button);
+    $cardBody.append($cardTitle, $notional_amount, $proposer, $counterparty, $swap_rate, $maturity_date, $counterparty_escrow, $counterparty_input_label, $counterparty_input, $enter_button);
     $cardContainer.append($cardBody);
     return $cardContainer;
   }
@@ -276,12 +277,12 @@ App = {
       //calculate counterparty deposited escrow amount
       var c_eth_ecrow_amount = c_escrow/ Math.pow(10, 18);
       var c_escrow_amount = c_eth_ecrow_amount * price_in_usd_for_one_eth;
-      c_deposited_escrow_amount = parseInt(c_escrow_amount);
+      c_deposited_escrow_amount = c_escrow_amount.toFixed(2);
 
       //calculate proposer deposited escrow amount
       var p_eth_ecrow_amount = p_escrow/ Math.pow(10, 18);
       var p_escrow_amount = p_eth_ecrow_amount * price_in_usd_for_one_eth;
-      p_deposited_escrow_amount = parseInt(p_escrow_amount);
+      p_deposited_escrow_amount = p_escrow_amount.toFixed(2);
 
       //convert notional amount in wei to notional amount in USD
       var p_wei_notional_amount = proposal_owner_struct[0];
@@ -291,7 +292,8 @@ App = {
 
       // proposal owner input rate
       var p_owner_input_rate = proposal_owner_struct[1];
-      p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
+      // p_owner_input_rate = p_owner_input_rate / Math.pow(10, 9);
+      p_owner_input_rate = p_owner_input_rate / Math.pow(10, 7);
       p_owner_input_rate = p_owner_input_rate * 100;
 
       // maturity end date
@@ -303,7 +305,7 @@ App = {
       p_swap_out_rate = proposal_owner_struct[3];
 
       if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
-        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow);
+        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount);
 
         $proposed_int_swap.html(card);
       }
@@ -385,7 +387,8 @@ App = {
       wei_escrow_amount = window.web3.toWei(eth_escrow_amount, "ether");
 
       proposer_rate = $current_annual_rate.val() /100;
-      proposer_rate = proposer_rate * Math.pow(10, 9);
+      // proposer_rate = proposer_rate * Math.pow(10, 9);
+      proposer_rate = proposer_rate * Math.pow(10, 7);
 
       // register the proposal Owner
       return intSwapInstance.registerProposalOwner(wei_notional_amount, proposer_rate, unix_maturity_date, rate_type, $proposal_owner_address.val());
@@ -505,7 +508,8 @@ App = {
       intSwapInstance = instance;
 
       var $end_libor_rate = $('#varToFixedPayoutCalc_liborRate').val();
-      var $scaled_end_libor_rate = $end_libor_rate * 1000000
+      // var $scaled_end_libor_rate = $end_libor_rate * 1000000
+      var $scaled_end_libor_rate = $end_libor_rate * Math.pow(10, 7);
 
       return intSwapInstance.VarToFixedPayoutCalc($scaled_end_libor_rate);
 
@@ -540,7 +544,8 @@ App = {
       intSwapInstance = instance;
 
       var $end_libor_rate = $('#fixedToVarPayoutCalc_liborRate').val();
-      var $scaled_end_libor_rate = $end_libor_rate * 1000000
+      // var $scaled_end_libor_rate = $end_libor_rate * 1000000;
+      var $scaled_end_libor_rate = $end_libor_rate * Math.pow(10, 7);
 
       return intSwapInstance.FixedToVarPayoutCalc($scaled_end_libor_rate);
 
@@ -558,7 +563,7 @@ App = {
       //calculate the payout
       fixed_to_variable_eth_payout_amount = res/ Math.pow(10, 18);
       fixed_to_variable_usd_payout_amount = fixed_to_variable_eth_payout_amount * price_in_usd_for_one_eth;
-      var fixed_to_variable_payout_amount = parseInt(fixed_to_variable_usd_payout_amount);
+      var fixed_to_variable_payout_amount = fixed_to_variable_usd_payout_amount.toFixed(2);
 
       var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_eth_payout_amount, fixed_to_variable_payout_amount);
       $("#cal_payout").append(payoutResult);
