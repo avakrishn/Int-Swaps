@@ -1,4 +1,4 @@
-// Js file for intswap.html but name changed to getquote.html
+// js file connecting to Solidity Smart Contract, IntSwap.sol, via web3.js
 var $contract_address;
 var $current_account;
 var $notional_amount = $('#notional_amount');
@@ -56,14 +56,14 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     var $cardContainer = $('<div>').attr('class', 'card justify-content-center text-center p-1 mt-5');
 
     var $cardBody = $('<div>').attr('class', 'card-body');
-    var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').text(`Proposed Int Swap Contract`);
-    var $notional_amount = $('<h5>').attr('class', 'card-text').text(`Notional Amount: ${notional_amount}`);
-    var $proposer = $('<h5>').attr('class', 'card-text').text(`Proposer is swapping out of current ${proposer_rate_type} rate of ${proposer_input_rate.toFixed(2)}% into ${alternative_rate} rate`);
-    var $counterparty = $('<h5>').attr('class', 'card-text').text(`As the counterparty you will swap out of ${alternative_rate} into ${proposer_rate_type} rate`);
-    var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
-    var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
-    var $counterparty_escrow = $('<h5>').attr('class', 'card-text').text(`The escrow you will be depositing is: ${escrow_ETH} ETH ~ $${escrow_USD}`);
-    var $counterparty_input_label = $('<label class="mr-3">').text(`Enter Your Address to Become the Counterparty:`);
+    var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').html(`Proposed Int Swap Contract`);
+    var $notional_amount = $('<h5>').attr('class', 'card-text').html(`Notional Amount: <span style="color:green;">${notional_amount}</span>`);
+    var $proposer = $('<h5>').attr('class', 'card-text').html(`Proposer is swapping out of current ${proposer_rate_type} rate of <span style="color:green;">${proposer_input_rate.toFixed(2)}% </span> into ${alternative_rate} rate`);
+    var $counterparty = $('<h5>').attr('class', 'card-text').html(`As the counterparty you will swap out of ${alternative_rate} into ${proposer_rate_type} rate`);
+    var $swap_rate = $('<h5>').attr('class', 'card-text').html(`The swap rate is <span style="color:green;">${swap_contract_rate_percent}%</span>`);
+    var $maturity_date = $('<h5>').attr('class', 'card-text').html(`This contract will reach settlement on maturity date: <span style="color:green;">${end_date}</span>`);
+    var $counterparty_escrow = $('<h5>').attr('class', 'card-text').html(`The Escrow you will be depositing is: <span style="color:green;">${escrow_ETH} ETH ~ $${escrow_USD}</span>`);
+    var $counterparty_input_label = $('<label class="mr-3">').html(`Enter Your Address to Become the Counterparty:`);
     var $counterparty_input = $('<input class="container d-block w-75" id="counterparty_owner_address">').attr('type', 'text');
     var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-escrow=${escrow} data-percent=${escrow_percent} id="registerCounterparty" style="width: auto">Enter into Int Swap as Counterparty</button>`);
 
@@ -89,14 +89,14 @@ function intSwapCard(notional_amount, p_owner_input_rate, end_date, proposer_rat
     var $cardContainer = $('<div>').attr('class', 'card justify-content-center text-center p-1 mt-5');
 
     var $cardBody = $('<div>').attr('class', 'card-body');
-    var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').text(`Summary of IntSwap Contract to be Minted`);
-    var $notional_amount = $('<h5>').attr('class', 'card-text').text(`Notional Amount: ${notional_amount}`);
-    var $proposer = $('<h5>').attr('class', 'card-text').text(`Proposer is swapping out of current ${proposer_rate_type} rate of ${p_owner_input_rate.toFixed(2)}% into ${alternative_rate} rate`);
-    var $proposerEscrow = $('<h5>').attr('class', 'card-text').text(`Proposer has deposited $${p_deposited_escrow_amount} into escrow from address ${proposerAddress}.`);
-    var $counterpartyEscrow = $('<h5>').attr('class', 'card-text').text(`Counterparty has deposited $${c_deposited_escrow_amount} into escrow from address ${counterpartyAddress}.`);
-    var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
-    var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
-    var $counterparty_input_label = $('<label class="mr-3">').text(`Enter the above Swap Rate to Confirm the IntSwap Contract.`);
+    var $cardTitle = $('<h2>').attr('class', 'card-title mt-2').html(`Summary of IntSwap Contract to be Minted`);
+    var $notional_amount = $('<h5>').attr('class', 'card-text').html(`Notional Amount: <span style="color:green;">$${notional_amount}</span>`);
+    var $proposer = $('<h5>').attr('class', 'card-text').html(`Proposer is swapping out of current ${proposer_rate_type} rate of <span style="color:green;">${p_owner_input_rate.toFixed(2)}%</span> into ${alternative_rate} rate`);
+    var $proposerEscrow = $('<h5>').attr('class', 'card-text').html(`Proposer has deposited $${p_deposited_escrow_amount} into escrow from address ${proposerAddress}.`);
+    var $counterpartyEscrow = $('<h5>').attr('class', 'card-text').html(`Counterparty has deposited $${c_deposited_escrow_amount} into escrow from address ${counterpartyAddress}.`);
+    var $swap_rate = $('<h5>').attr('class', 'card-text').html(`The swap rate is <span style="color:green;">${swap_contract_rate_percent}%</span>`);
+    var $maturity_date = $('<h5>').attr('class', 'card-text').html(`This contract will reach settlement on maturity date: <span style="color:green;">${end_date}</span>`);
+    var $counterparty_input_label = $('<label class="mr-3">').html(`Enter the above Swap Rate to Confirm the IntSwap Contract.`);
     var $counterparty_input = $('<input class="container d-block w-75" id="swap_rate_input">').attr('type', 'text');
     var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-swaprate=${swap_contract_rate_percent} id="mintIntswap" style="width: auto">Mint IntSwap</button>`);
 
@@ -272,6 +272,7 @@ App = {
       var proposal_owner_escrow = result[1];
       var p_escrow = proposal_owner_escrow[1];
       var counterparty_escrow = result[2];
+      var int_swap_contract = result[3];
       total_escrow_deposited_in_contract = result[3][0]/Math.pow(10, 18) * price_in_usd_for_one_eth;
       var c_escrow = counterparty_escrow[1];
 
@@ -290,6 +291,7 @@ App = {
       var p_eth_notional_amount = p_wei_notional_amount/ Math.pow(10, 18);
       var p_notional_amount = p_eth_notional_amount * price_in_usd_for_one_eth;
       p_notional_amount = parseInt(p_notional_amount);
+      p_notional_amount_string = p_notional_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
       // proposal owner input rate
       var p_owner_input_rate = proposal_owner_struct[1];
@@ -297,25 +299,100 @@ App = {
       p_owner_input_rate = p_owner_input_rate / Math.pow(10, 7);
       p_owner_input_rate = p_owner_input_rate * 100;
 
+
+      var lastDayOfMonth = {'Jan': '1/31','Feb': '2/28','Mar': '3/31','Apr': '4/30','May': '5/31','Jun': '6/30','Jul': '7/31','Aug': '8/31','Sep': '9/30','Oct': '10/31','Nov': '11/30','Dec': '12/31'}
+
+      var numMonth = {'Jan': '1','Feb': '2','Mar': '3','Apr': '4','May': '5','Jun': '6','Jul': '7','Aug': '8','Sep': '9','Oct': '10','Nov': '11','Dec': '12'}
+      // maturity start date
+      console.log(int_swap_contract[2]);
+      
+      var start_date = new Date(parseFloat(int_swap_contract[2]) * 1000);
+      var start_dateStr = start_date.toString().split(" ");
+      var start_month = start_dateStr[1];
+      var start_year = start_dateStr[3];
+      var start_day = start_dateStr[2];
+      if (start_month in numMonth){
+        start_month = numMonth[start_month];
+      }
+      var contract_start_date = `${start_month}/${start_day}/${start_year}`;
+
+
       // maturity end date
-      var date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
-      date = date.toString().split(" ");
-      date = `${date[1]} ${date[3]}`
+      var end_date = new Date(parseFloat(proposal_owner_struct[2]) * 1000);
+      var end_dateStr = end_date.toString().split(" ");
+      var end_month = end_dateStr[1];
+      var end_year = end_dateStr[3];
+      end_date = `${end_month} ${end_year}`
+      var endLastMonthDay;
+      if (end_month in lastDayOfMonth){
+        endLastMonthDay = lastDayOfMonth[end_month];
+      }
+      var contract_end_date = `${endLastMonthDay}/${end_year}`;
+
 
       // proposal owner will swap out of p_swap_out_rate
       p_swap_out_rate = proposal_owner_struct[3];
-
+      
+      // Proposer but no Counterparty Yet
       if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
-        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount, p_eth_ecrow_amount);
+        //------create Proposed Int Swap Card
+        var card = proposedIntSwapCard(p_notional_amount_string, p_owner_input_rate, end_date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount, p_eth_ecrow_amount);
 
         $proposed_int_swap.html(card);
+
+        //------create new row in Contract History with newly proposed contract
+        var swap_into;
+        if(p_swap_out_rate == "variable"){
+          swap_into = "Fixed";
+        }else{
+          swap_into = "Variable"
+        }
+        $('#current_contract').empty();
+        var newContractHistoryRowWithoutCounterparty = $(`<tr id="current_contract"><td>0008</td> <td id="current_inception">TBD</td> <td id="current_maturity">${contract_end_date}</td><td id="current_rate_type" style="text-transform: capitalize">${swap_into}</td><td id="current_notional">${p_notional_amount_string}</td><td id="current_swap_rate">${swap_contract_rate_percent}</td><td id="current_escrow">${p_deposited_escrow_amount}</td><td id="current_payout">TBD</td><td id="current_status">Pending</td></tr></strong>`);
+        $('#fill_history_table').append(newContractHistoryRowWithoutCounterparty);
       }
 
       //show mint swap if counterparty deposited and but the intswap proposal has not created
       //add in logic to not show intswap card if it's minted
+
+      // Proposer and Counterparty for Contract but has not minted yet
       if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract == 0){
-        var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
+        var mintInswapCard = intSwapCard(p_notional_amount_string, p_owner_input_rate, end_date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
         $mint_int_swap.html(mintInswapCard);
+
+
+        //------create new row in Contract History with newly proposed contract based on if proposer or counterparty
+        var swap_into;
+        if($current_account == proposerAddress && p_swap_out_rate == "variable"){
+          swap_into = "Fixed";
+        }else if($current_account == proposerAddress && p_swap_out_rate == "fixed"){
+          swap_into = "Variable"
+        }else{
+          swap_into = p_swap_out_rate;
+        }
+
+        $('#current_contract').empty();
+        var newContractHistoryRowAfterMinting = $(`<tr id="current_contract"><td>0008</td> <td id="current_inception">TBD</td> <td id="current_maturity">${contract_end_date}</td><td id="current_rate_type" style="text-transform: capitalize">${swap_into}</td><td id="current_notional">${p_notional_amount_string}</td><td id="current_swap_rate">${swap_contract_rate_percent}</td><td id="current_escrow">${p_deposited_escrow_amount}</td><td id="current_payout">TBD</td><td id="current_status">Pending</td></tr></strong>`);
+        $('#fill_history_table').append(newContractHistoryRowAfterMinting);
+      }
+
+      // After Minting the Contract
+      if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract > 0){
+        //------create new row in Contract History with newly proposed contract based on if proposer or counterparty
+        
+        var swap_into;
+        if($current_account == proposerAddress && p_swap_out_rate == "variable"){
+          swap_into = "Fixed";
+        }else if($current_account == proposerAddress && p_swap_out_rate == "fixed"){
+          swap_into = "Variable"
+        }else{
+          swap_into = p_swap_out_rate;
+        }
+
+        $('#current_contract').empty();
+
+        var newContractHistoryRowWithCounterparty = $(`<tr id="current_contract"><td>0008</td> <td id="current_inception">${contract_start_date}</td> <td id="current_maturity">${contract_end_date}</td><td id="current_rate_type" style="text-transform: capitalize">${swap_into}</td><td id="current_notional">${p_notional_amount_string}</td><td id="current_swap_rate">${swap_contract_rate_percent}</td><td id="current_escrow">${p_deposited_escrow_amount}</td><td id="current_payout">TBD</td><td id="current_status">Outstanding</td></tr></strong>`);
+        $('#fill_history_table').append(newContractHistoryRowWithCounterparty);
       }
 
       //calculate which address belong to varToFix and vice versa
@@ -342,6 +419,13 @@ App = {
         var not_payee = $('<h5>').attr('class', 'card-text text-danger mt-5').text(`To withdraw, you need to be either be a Proposer or Counterparty of this IntSwap contract: ${$contract_address}`);
         $("#withdraw").append(not_payee);
       }
+
+      // if(proposerAddress != "0x0000000000000000000000000000000000000000" && counterpartyAddress == "0x0000000000000000000000000000000000000000"){
+
+      // }else if{
+        
+      // }
+
 
     }).catch(function (err) {
       console.log(err);
@@ -411,7 +495,8 @@ App = {
       //   intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
       // }, 1000);
 
-      return intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 5000000, value: wei_escrow_amount });
+      // changed gas from 5000000 to 3000000 because metamask was giving error with 5000000
+      return intSwapInstance.proposerDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $proposal_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
 
 
       // pattern for deposit eth into account
@@ -450,7 +535,9 @@ App = {
       var escrow_percent = $("#registerCounterparty").attr('data-percent');
 
       // have counterparty owner deposit escrow into Int Swap contract using msg.data and msg.value
-      return intSwapInstance.counterpartyDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $counterparty_owner_address.val(), gas: 5000000, value: wei_escrow_amount });
+
+      // changed gas from 5000000 to 3000000 because metamask was giving error with 5000000
+      return intSwapInstance.counterpartyDepositIntoEscrow(wei_escrow_amount, escrow_percent, { from: $counterparty_owner_address.val(), gas: 3000000, value: wei_escrow_amount });
 
       // pattern for deposit eth into account
       // myContractInstance.depositFunds({from: web3.eth.accounts[0], gas: 3000000, value: 100}, function(err, res){});

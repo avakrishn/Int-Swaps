@@ -11,6 +11,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/contracthistory.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,14 +28,14 @@
       <nav>
           <a class="btn btn-primary" href="index.html">Home</a>
           <a class="btn btn-primary" href="getquote.html">Get a Quote</a>
-          <a class="btn btn-primary" href="browseoffers.html">Browse Offers</a>
           <a class="btn btn-primary" role="button" href="#">Contract History</a>
+          <a class="btn btn-primary" href="browseoffers.html">Browse Offers</a>
           <a class="btn btn-primary" href="mint_intswap.html">Mint IntSwap</a>
           <!-- <a class="btn btn-primary" href="withdraw.html">Withdraw</a> -->
           <a class="btn btn-primary" href="cal_payout.html">Calculate Payout</a>
       <a class="btn btn-primary" href="withdraw_ether.html">Withdraw</a>
           <a class="btn btn-primary" href="faq.html">FAQ</a>
-          <a class="btn btn-primary" href="about.html">About Us</a>
+          <!-- <a class="btn btn-primary" href="about.html">About Us</a> -->
       </nav>
     </div>
     <div class="container">
@@ -66,6 +67,10 @@
               </table>
               <br/>
                <p> TBD = To be determined </p>
+               <p> Pending = Pending Counterparty or Minting </p>
+               <p> Outstanding = Not Matured</p>
+               <p> Ready to pay = Matured and Payout not Withdrawn Yet</p>
+               <p> Paid = Matured and Payout Withdrawn</p>
             </div>
        </div>
 
@@ -86,5 +91,6 @@
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/withdraw.js"></script>
+    <script src="js/app.js"></script>   
   </body>
 </html>

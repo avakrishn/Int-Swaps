@@ -8,3 +8,12 @@ th {
 
 }
 
+td {
+	line-height: 200%;
+
+
+}
+
+#current_contract{
+	font-weight: bold;
+}
