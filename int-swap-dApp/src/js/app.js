@@ -42,7 +42,7 @@ var swap_contract_rate_percent = 2.88;
 var swap_contract_rate_scaled = 28800000;
 
 
-function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow, escrow_USD ){
+function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow, escrow_USD, escrow_ETH ){
 
   if(notional_amount > 0 && escrow > 0){
     var alternative_rate;
@@ -62,7 +62,7 @@ function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, pro
     var $counterparty = $('<h5>').attr('class', 'card-text').text(`As the counterparty you will swap out of ${alternative_rate} into ${proposer_rate_type} rate`);
     var $swap_rate = $('<h5>').attr('class', 'card-text').text(`The swap rate is ${swap_contract_rate_percent}%`);
     var $maturity_date = $('<h5>').attr('class', 'card-text').text(`This contract will reach settlement on maturity date: ${end_date}`);
-    var $counterparty_escrow = $('<h5>').attr('class', 'card-text').text(`The escrow you will be depositing is: $${escrow_USD}`);
+    var $counterparty_escrow = $('<h5>').attr('class', 'card-text').text(`The escrow you will be depositing is: ${escrow_ETH} ETH ~ $${escrow_USD}`);
     var $counterparty_input_label = $('<label class="mr-3">').text(`Enter Your Address to Become the Counterparty:`);
     var $counterparty_input = $('<input class="container d-block w-75" id="counterparty_owner_address">').attr('type', 'text');
     var $enter_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-3" data-escrow=${escrow} data-percent=${escrow_percent} id="registerCounterparty" style="width: auto">Enter into Int Swap as Counterparty</button>`);
@@ -225,8 +225,9 @@ App = {
   },
 
   bindEvents: function () {
-    $(document).on('click', '#transferButton', App.handleTransfer);
-    $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+    // $(document).on('click', '#transferButton', App.handleTransfer);
+    // $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+    $(document).on('click', '#getQuote', App.displayEcrowForProposerToDeposit);    
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
     $(document).on('click', '#mintIntswap', App.mintIntSwap);
@@ -305,7 +306,7 @@ App = {
       p_swap_out_rate = proposal_owner_struct[3];
 
       if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
-        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount);
+        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount, p_eth_ecrow_amount);
 
         $proposed_int_swap.html(card);
       }
@@ -604,6 +605,19 @@ App = {
     }).catch(function (err) {
       console.log(err.message);
     });
+  },
+  // Will display the escrow in ETH and in USD that the proposer needs to deposit into the contract
+  displayEcrowForProposerToDeposit: function (event){
+    event.preventDefault();
+    var notional_amount = $notional_amount.val();
+    var escrow_amount_USD = 0.002 * notional_amount;
+    var escrow_amount_ETH = escrow_amount_USD / price_in_usd_for_one_eth;
+
+    document.getElementById('proposer_escrow_to_deposit').innerText = `${escrow_amount_ETH} ETH ~ $ ${escrow_amount_USD.toFixed(2)}`;
+
+    // document.getElementById('proposer_escrow_to_deposit').style.color = "#4DB748";
+    document.getElementById('proposer_escrow_to_deposit').style.color = "green";
+
   },
 
 };
