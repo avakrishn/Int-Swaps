@@ -225,8 +225,9 @@ App = {
   },
 
   bindEvents: function () {
-    $(document).on('click', '#transferButton', App.handleTransfer);
-    $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+    // $(document).on('click', '#transferButton', App.handleTransfer);
+    // $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
+    $(document).on('click', '#getQuote', App.displayEcrowForProposerToDeposit);    
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
     $(document).on('click', '#mintIntswap', App.mintIntSwap);
@@ -604,6 +605,19 @@ App = {
     }).catch(function (err) {
       console.log(err.message);
     });
+  },
+  // Will display the escrow in ETH and in USD that the proposer needs to deposit into the contract
+  displayEcrowForProposerToDeposit: function (event){
+    event.preventDefault();
+    var notional_amount = $notional_amount.val();
+    var escrow_amount_USD = 0.002 * notional_amount;
+    var escrow_amount_ETH = escrow_amount_USD / price_in_usd_for_one_eth;
+
+    document.getElementById('proposer_escrow_to_deposit').innerText = `${escrow_amount_ETH} ETH ~ $ ${escrow_amount_USD.toFixed(2)}`;
+
+    // document.getElementById('proposer_escrow_to_deposit').style.color = "#4DB748";
+    document.getElementById('proposer_escrow_to_deposit').style.color = "green";
+
   },
 
 };
