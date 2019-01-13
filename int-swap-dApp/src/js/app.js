@@ -111,21 +111,18 @@ function displayIntSwapTX(transactionHash) {
   var mintIntSwapResult =  $('<div>');
   var $tx = $('<h5>').attr('class', 'card-text').text(`IntSwap Minted Successfully: ${transactionHash}`);
 
-  // var getPayout_VarToFixed = cal_payout_VarToFixed();
-  // var getPayout_FixedToVar = cal_payout_FixedToVar()
-
   mintIntSwapResult.append($tx);
   return mintIntSwapResult;
 }
 
 function calculatePayoutForPayees(varToFixedAddress, fixedToVarAddress) {
-  var calPaypout =  $('<div>');
+  var calPayout =  $('<div>');
 
   var getPayout_VarToFixed = cal_payout_VarToFixed(varToFixedAddress);
   var getPayout_FixedToVar = cal_payout_FixedToVar(fixedToVarAddress)
 
-  calPaypout.append(getPayout_VarToFixed, getPayout_FixedToVar);
-  return calPaypout;
+  calPayout.append(getPayout_VarToFixed, getPayout_FixedToVar);
+  return calPayout;
 }
 
 
@@ -153,22 +150,18 @@ function cal_payout_FixedToVar(payee_address) {
   return cal_payout_FixedToVar
 }
 
-function displayVariableToFixedPayout(payee, payment) {
-  var $result = $('<h5>').attr('class', 'card-text text-success mt-3').text(`The payout amount to the ${payee} is $${payment}.`);
+function displayVariableToFixedPayout(payee, paymentETH, paymentUSD) {
+  var $result = $('<h5>').attr('class', 'card-text text-success mt-3').text(`The payout amount to the ${payee} is ${paymentETH} ETH ~ $${paymentUSD}.`);
   return $result
 }
 
-function displayFixedToVariablePayout(payee, payment) {
-  var $result = $('<h5>').attr('class', 'card-text text-success mt-3').text(`The payout amount to the ${payee} is $${payment}.`);
+function displayFixedToVariablePayout(payee, paymentETH, paymentUSD) {
+  var $result = $('<h5>').attr('class', 'card-text text-success mt-3').text(`The payout amount to the ${payee} is ${paymentETH} ETH ~ $${paymentUSD}.`);
   return $result
 }
-
-{/* <button class="btn btn-primary center" id="proposerWithdraw" type="button">Proposer Withdraw</button>
-
-<button class="btn btn-primary center" id="counterpartyWithdraw" type="button">Counterparty Withdraw</button> */}
 
 function proposerWithdrawButton() {
-  var $proposal_withdraw_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-5" id="proposerWithdraw"  style="width: auto">Proposer Withdaw</button>`);
+  var $proposal_withdraw_button = $(`<button type="button" class="btn btn-primary center btn-sm mt-5" id="proposerWithdraw"  style="width: auto">Proposer Withdraw</button>`);
   return $proposal_withdraw_button
 }
 
@@ -268,7 +261,7 @@ App = {
 
         var promises = [];
 
-        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(proposerAddress), intSwapInstance.proposalAddressToProposalEscrow.call(proposerAddress), intSwapInstance.counterpartyAddressToCounterpartyAddressEscrow.call(counterpartyAddress));
+        promises.push(intSwapInstance.proposalAddressToProposalOwner.call(proposerAddress), intSwapInstance.proposalAddressToProposalEscrow.call(proposerAddress), intSwapInstance.counterpartyAddressToCounterpartyAddressEscrow.call(counterpartyAddress), intSwapInstance.contractAddressToContractTerms.call($contract_address));
 
         return Promise.all(promises);
 
@@ -277,6 +270,7 @@ App = {
       var proposal_owner_escrow = result[1];
       var p_escrow = proposal_owner_escrow[1];
       var counterparty_escrow = result[2];
+      total_escrow_deposited_in_contract = result[3][0]/Math.pow(10, 18) * price_in_usd_for_one_eth;
       var c_escrow = counterparty_escrow[1];
 
       //calculate counterparty deposited escrow amount
@@ -315,7 +309,8 @@ App = {
       }
 
       //show mint swap if counterparty deposited and but the intswap proposal has not created
-      if(counterpartyAddress != "0x0000000000000000000000000000000000000000"){
+      //add in logic to not show intswap card if it's minted
+      if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract == 0){
         var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
         $mint_int_swap.html(mintInswapCard);
       }
@@ -350,30 +345,6 @@ App = {
 
     });
   },
-
-  displayProfitLoss: function (event) {
-    $(document).ready(function () {
-      $("#displayProfitLoss").click(function () {
-        $("#step_one").hide();
-        $("#step_two").show();
-      });
-    });
-    var $escrow_amount = notional_amount * 0.002;
-    var $unix_date_now = new Date();
-    var $unix_maturity_date = new Date(maturity_date);
-    var $swap_contract_rate = 0.0280;   //hard-code this value for demo
-    var $contract_months = $unix_maturity_date - $unix_date_now; //parse month and year instead???
-    document.getElementById("display_maturity_date").innerHTML = $unix_maturity_date;
-    document.getElementById("display_inception_date").innerHTML = $unix_date_now;
-    document.getElementById("display_escrow_amount").innerHTML = "The required escrow amount is:".$escrow_amount;
-    document.getElementById("demo").innerHTML = "Hello World!";
-
-    //left off here* still need to calculate number of months ****************************************************************************************
-
-
-
-  },
-
   registerProposalOwner: function (event) {
     if(registerProposalOwnerRunning ==  true){
       return false;
@@ -551,9 +522,9 @@ App = {
       //calculate the payout
       variable_to_fixed_eth_payout_amount = res/ Math.pow(10, 18);
       variable_to_fixed_usd_payout_amount = variable_to_fixed_eth_payout_amount * price_in_usd_for_one_eth;
-      var variable_to_fixed_payout_amount = parseInt(variable_to_fixed_usd_payout_amount);
+      var variable_to_fixed_payout_amount = variable_to_fixed_usd_payout_amount.toFixed(2);
 
-      var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_payout_amount);
+      var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_eth_payout_amount, variable_to_fixed_payout_amount);
 
       $("#cal_payout").append(payoutResult);
 
@@ -589,7 +560,7 @@ App = {
       fixed_to_variable_usd_payout_amount = fixed_to_variable_eth_payout_amount * price_in_usd_for_one_eth;
       var fixed_to_variable_payout_amount = parseInt(fixed_to_variable_usd_payout_amount);
 
-      var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_payout_amount);
+      var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_eth_payout_amount, fixed_to_variable_payout_amount);
       $("#cal_payout").append(payoutResult);
 
 
