@@ -44,7 +44,7 @@ var swap_contract_rate_scaled = 28800000;
 
 function proposedIntSwapCard(notional_amount, proposer_input_rate, end_date, proposer_rate_type, escrow, escrow_USD, escrow_ETH ){
 
-  if(notional_amount > 0 && escrow > 0){
+  if(notional_amount > 0 && escrow_ETH > 0){
     var alternative_rate;
 
     if(proposer_rate_type == "fixed"){
@@ -336,7 +336,7 @@ App = {
       // Proposer but no Counterparty Yet
       if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
         //------create Proposed Int Swap Card
-        var card = proposedIntSwapCard(p_notional_amount_string, p_owner_input_rate, end_date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount, p_eth_ecrow_amount);
+        var card = proposedIntSwapCard(p_notional_amount, p_owner_input_rate, end_date, p_swap_out_rate, p_escrow, p_deposited_escrow_amount, p_eth_ecrow_amount);
 
         $proposed_int_swap.html(card);
 
@@ -357,7 +357,7 @@ App = {
 
       // Proposer and Counterparty for Contract but has not minted yet
       if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract == 0){
-        var mintInswapCard = intSwapCard(p_notional_amount_string, p_owner_input_rate, end_date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
+        var mintInswapCard = intSwapCard(p_notional_amount, p_owner_input_rate, end_date, p_swap_out_rate, proposerAddress, counterpartyAddress, p_deposited_escrow_amount, c_deposited_escrow_amount);
         $mint_int_swap.html(mintInswapCard);
 
 
