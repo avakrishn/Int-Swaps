@@ -19,8 +19,15 @@ let proposerAddress;
 let counterpartyAddress;
 let variable_to_fixed_address;
 let fixed_to_variable_address;
+
 var variable_to_fixed_payee;
 var fixed_to_variable_payee;
+var fixed_to_variable_payout_amount;
+var variable_to_fixed_payout_amount;
+
+var payoutResult_VarToFixed;
+var payoutResult_fixedToVar;
+
 var total_escrow_deposited_in_contract;
 var intSwap_tx;
 var p_swap_out_rate;
@@ -126,7 +133,6 @@ function calculatePayoutForPayees(varToFixedAddress, fixedToVarAddress) {
   return calPayout;
 }
 
-
 function cal_payout_VarToFixed(payee_address) {
   var $varToFixedCalLabel = $('<label class="mr-3">').text(`Variable to Fixed Payout`);
   var $varToFixedAddress = $('<h5>').attr('class', 'mr-3').text(`${payee_address}`);
@@ -171,6 +177,11 @@ function counterpartyWithdrawButton() {
   return $counterparty_withdraw_button
 }
 
+function displayPayout(payee, paymentETH, paymentUSD) {
+  var $result = $('<h5>').attr('class', 'card-text text-success mt-3').text(`The payout amount to the ${payee} is ${paymentETH} ETH ~ $${paymentUSD}.`);
+  return $result
+}
+
 $.ajax({
   type: "GET",
   url: "https://api.coinmarketcap.com/v1/ticker/ethereum/",
@@ -182,7 +193,6 @@ $.ajax({
     console.log(err);
   }
 });
-
 
 
 App = {
@@ -227,7 +237,7 @@ App = {
   bindEvents: function () {
     // $(document).on('click', '#transferButton', App.handleTransfer);
     // $(document).on('click', '#displayProfitLoss', App.displayProfitLoss);
-    $(document).on('click', '#getQuote', App.displayEcrowForProposerToDeposit);    
+    $(document).on('click', '#getQuote', App.displayEcrowForProposerToDeposit);
     $(document).on('click', '#placeTrade', App.registerProposalOwner);
     $(document).on('click', '#registerCounterparty', App.registerCounterpartyOwner);
     $(document).on('click', '#mintIntswap', App.mintIntSwap);
@@ -305,7 +315,7 @@ App = {
       var numMonth = {'Jan': '1','Feb': '2','Mar': '3','Apr': '4','May': '5','Jun': '6','Jul': '7','Aug': '8','Sep': '9','Oct': '10','Nov': '11','Dec': '12'}
       // maturity start date
       console.log(int_swap_contract[2]);
-      
+
       var start_date = new Date(parseFloat(int_swap_contract[2]) * 1000);
       var start_dateStr = start_date.toString().split(" ");
       var start_month = start_dateStr[1];
@@ -329,10 +339,9 @@ App = {
       }
       var contract_end_date = `${endLastMonthDay}/${end_year}`;
 
-
       // proposal owner will swap out of p_swap_out_rate
       p_swap_out_rate = proposal_owner_struct[3];
-      
+
       // Proposer but no Counterparty Yet
       if(counterpartyAddress == "0x0000000000000000000000000000000000000000"){
         //------create Proposed Int Swap Card
@@ -379,7 +388,7 @@ App = {
       // After Minting the Contract
       if(counterpartyAddress != "0x0000000000000000000000000000000000000000" && total_escrow_deposited_in_contract > 0){
         //------create new row in Contract History with newly proposed contract based on if proposer or counterparty
-        
+
         var swap_into;
         if($current_account == proposerAddress && p_swap_out_rate == "variable"){
           swap_into = "Fixed";
@@ -403,35 +412,47 @@ App = {
         variable_to_fixed_address = counterpartyAddress;
         fixed_to_variable_address = proposerAddress;
       }
+
+      //display calculate payout
       var calculate_payout = calculatePayoutForPayees(variable_to_fixed_address, fixed_to_variable_address);
       $("#cal_payout").html(calculate_payout);
 
-      //display the withdaw payout button
-      if($current_account == proposerAddress) {
-        //display proposer withdraw button
-        var proposer_withdraw = proposerWithdrawButton();
-        $("#withdraw").append(proposer_withdraw);
-      } else if ($current_account == counterpartyAddress) {
-          //display counterparty withdraw button
-          var counterparty_withdraw = counterpartyWithdrawButton();
-          $("#withdraw").append(counterparty_withdraw);
-      } else {
-        var not_payee = $('<h5>').attr('class', 'card-text text-danger mt-5').text(`To withdraw, you need to be either be a Proposer or Counterparty of this IntSwap contract: ${$contract_address}`);
-        $("#withdraw").append(not_payee);
-      }
+      //get payout amount for proposer and counterparty from the contract
+      var payoutPromises = [];
 
-      // if(proposerAddress != "0x0000000000000000000000000000000000000000" && counterpartyAddress == "0x0000000000000000000000000000000000000000"){
+      payoutPromises.push(intSwapInstance.payeeAddressToPayAmount.call(proposerAddress), intSwapInstance.payeeAddressToPayAmount.call(counterpartyAddress));
 
-      // }else if{
-        
-      // }
+      return Promise.all(payoutPromises);
 
+  }).then(function (res) {
+    proposer_eth_payout_amount = res[0]/ Math.pow(10, 18);
+    proposer_payout_amount = (proposer_eth_payout_amount * price_in_usd_for_one_eth).toFixed(2);
 
-    }).catch(function (err) {
-      console.log(err);
+    counterparty_eth_payout_amount = res[1]/ Math.pow(10, 18);
+    counterparty_payout_amount = (counterparty_eth_payout_amount * price_in_usd_for_one_eth).toFixed(2);
 
-    });
-  },
+    var proposerPayoutResult = displayPayout("Proposer", proposer_eth_payout_amount, proposer_payout_amount);
+
+    var counterpartyPayoutResult = displayPayout("Counterparty", counterparty_eth_payout_amount, counterparty_payout_amount);
+
+    if($current_account == proposerAddress) {
+      //display proposer withdraw button
+      var proposer_withdraw = proposerWithdrawButton();
+      $("#withdraw").append(proposer_withdraw, proposerPayoutResult);
+
+    } else if ($current_account == counterpartyAddress) {
+        //display counterparty withdraw button
+        var counterparty_withdraw = counterpartyWithdrawButton();
+        $("#withdraw").append(counterparty_withdraw, counterpartyPayoutResult);
+    } else {
+      var not_payee = $('<h5>').attr('class', 'card-text text-danger mt-5').text(`To withdraw, you need to be either be a Proposer or Counterparty of this IntSwap contract: ${$contract_address}`);
+      $("#withdraw").append(not_payee);
+    }
+
+  }).catch(function (err) {
+    console.log(err.message);
+  });
+},
   registerProposalOwner: function (event) {
     if(registerProposalOwnerRunning ==  true){
       return false;
@@ -614,11 +635,11 @@ App = {
       //calculate the payout
       variable_to_fixed_eth_payout_amount = res/ Math.pow(10, 18);
       variable_to_fixed_usd_payout_amount = variable_to_fixed_eth_payout_amount * price_in_usd_for_one_eth;
-      var variable_to_fixed_payout_amount = variable_to_fixed_usd_payout_amount.toFixed(2);
+      variable_to_fixed_payout_amount = variable_to_fixed_usd_payout_amount.toFixed(2);
 
-      var payoutResult = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_eth_payout_amount, variable_to_fixed_payout_amount);
+      payoutResult_VarToFixed = displayVariableToFixedPayout(variable_to_fixed_payee, variable_to_fixed_eth_payout_amount, variable_to_fixed_payout_amount);
 
-      $("#cal_payout").append(payoutResult);
+      $("#cal_payout").append(payoutResult_VarToFixed);
 
 
     }).catch(function (err) {
@@ -638,7 +659,7 @@ App = {
       return intSwapInstance.FixedToVarPayoutCalc($scaled_end_libor_rate);
 
     }).then(function (res) {
-      console.log(res);
+
       if(p_swap_out_rate == "fixed"){ //if proposer is swapping fixed to variable
         fixed_to_variable_payee = "Proposer";
         return intSwapInstance.payeeAddressToPayAmount.call(proposerAddress);
@@ -651,10 +672,10 @@ App = {
       //calculate the payout
       fixed_to_variable_eth_payout_amount = res/ Math.pow(10, 18);
       fixed_to_variable_usd_payout_amount = fixed_to_variable_eth_payout_amount * price_in_usd_for_one_eth;
-      var fixed_to_variable_payout_amount = fixed_to_variable_usd_payout_amount.toFixed(2);
+      fixed_to_variable_payout_amount = fixed_to_variable_usd_payout_amount.toFixed(2);
 
-      var payoutResult = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_eth_payout_amount, fixed_to_variable_payout_amount);
-      $("#cal_payout").append(payoutResult);
+      payoutResult_fixedToVar = displayFixedToVariablePayout(fixed_to_variable_payee, fixed_to_variable_eth_payout_amount, fixed_to_variable_payout_amount);
+      $("#cal_payout").append(payoutResult_fixedToVar);
 
 
     }).catch(function (err) {
