@@ -1,2 +1,3 @@
 # IntSwaps
-## Decentralized Application on the Ethereum Blockchain
+### Decentralized Application 
+### Interest Rate Swaps on the Ethereum Blockchain
